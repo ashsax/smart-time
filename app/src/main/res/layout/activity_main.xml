@@ -52,4 +52,13 @@
         android:layout_below="@+id/clock"
         android:layout_centerHorizontal="true"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Alarm"
+        android:id="@+id/startAlarmButton"
+        android:layout_alignBottom="@+id/circularSeekBar1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="86dp" />
+
 </RelativeLayout>

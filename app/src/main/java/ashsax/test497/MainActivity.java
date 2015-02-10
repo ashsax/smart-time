@@ -1,28 +1,53 @@
 package ashsax.test497;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 public class MainActivity extends ActionBarActivity {
 
     private TextView mClock;
     private SeekBar mSeekBar;
+    private Button startAlarmButton;
 //    private LinearLayout mBox;
     private int minuteCount;
     private CircularSeekBar mCircularSeekBar;
     private Time mTime;
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startAlarmButton = (Button) findViewById(R.id.startAlarmButton);
+        startAlarmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+                pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
+                alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis() + mTime.getMilliseconds(), pendingIntent);
+            }
+        });
         mTime = new Time();
         mClock = (TextView) findViewById(R.id.clock);
 //        mBox = (LinearLayout) findViewById(R.id.box);

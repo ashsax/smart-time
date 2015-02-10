@@ -42,7 +42,11 @@ public class Time {
         return timeStr+String.valueOf(minute)+ampm;
     }
 
-    public int getMinuteCount(){
+    public int getMinuteCount() {
         return hour*60 + minute;
+    }
+
+    public int getMilliseconds() {
+        return hour*60*60*1000+minute*60*1000;
     }
 }
