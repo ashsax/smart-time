@@ -4,6 +4,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -33,6 +36,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff005fbf));
         startAlarmButton = (Button) findViewById(R.id.startAlarmButton);
         startAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
                 pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
                 alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis() + mTime.getMilliseconds(), pendingIntent);
+                Toast.makeText(MainActivity.this, "Alarm set for " + mTime, Toast.LENGTH_SHORT).show();
             }
         });
         mTime = new Time();
@@ -54,11 +59,12 @@ public class MainActivity extends ActionBarActivity {
         mSeekBar = (SeekBar) findViewById(R.id.seekBar);
         mCircularSeekBar = (CircularSeekBar) findViewById(R.id.circularSeekBar1);
         mCircularSeekBar.setMax(60);
+        mCircularSeekBar.setCircleColor(Color.BLACK);
         mCircularSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
                 mTime.minute = progress;
-                if(progress == 60)
+                if (progress == 60)
                     mTime.minute = 0;
                 minuteCount = mTime.getMinuteCount();
                 mClock.setText(mTime.toString());
@@ -109,32 +115,9 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     public float updateColor(int i) {
-//        if (i < 24) {
-//            return 240 - 100f * i / 48;
-//        }
-//        else {
-//            return 140 + 100f * i / 48;
-//        }
         float val = (float) Math.cos((2 * Math.PI * (float) i / 48));
-
         return 210 + 30f * val;
-
     }
 
     public String updateClock(int i) {
