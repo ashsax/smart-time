@@ -23,18 +23,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="45dp" />
 
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/seekBar"
-        android:max="23"
-        android:layout_marginBottom="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:clickable="true"
-        android:progressBackgroundTint="#ff000000" />
-
     <!--<LinearLayout-->
         <!--android:orientation="horizontal"-->
         <!--android:id="@+id/box"-->
@@ -46,21 +34,40 @@
 
     <!--</LinearLayout>-->
 
-    <ashsax.test497.CircularSeekBar
-        android:id="@+id/circularSeekBar1"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/seekBar"
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:layout_below="@+id/clock"
-        android:layout_centerHorizontal="true"/>
+        android:id="@+id/circleLayout">
 
-    <Button
+        <ashsax.test497.CircularSeekBar
+            android:id="@+id/minuteSeekBar"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app1:lock_enabled="false"
+            android:layout_centerInParent="true"/>
+
+        <ashsax.test497.CircularSeekBar
+            android:id="@+id/hourSeekBar"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            app1:end_angle="270"
+            app1:lock_enabled="false"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+    <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set Alarm"
+        android:text="New ToggleButton"
+        android:textOff="Set Alarm"
+        android:textOn="Disable Alarm"
+        android:onClick="onToggleClicked"
         android:id="@+id/startAlarmButton"
-        android:layout_alignBottom="@+id/circularSeekBar1"
+        android:layout_below="@+id/circleLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="86dp" />
+        android:layout_marginTop="5dp"/>
 
 </RelativeLayout>

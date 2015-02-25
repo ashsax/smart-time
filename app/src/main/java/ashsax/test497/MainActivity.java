@@ -5,18 +5,16 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.Calendar;
 
@@ -27,7 +25,8 @@ public class MainActivity extends ActionBarActivity {
     private Button startAlarmButton;
 //    private LinearLayout mBox;
     private int minuteCount;
-    private CircularSeekBar mCircularSeekBar;
+    private CircularSeekBar mMinuteSeekBar;
+    private CircularSeekBar mHourSeekBar;
     private Time mTime;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
@@ -37,30 +36,15 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff005fbf));
-        startAlarmButton = (Button) findViewById(R.id.startAlarmButton);
-        startAlarmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-                pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
-                alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis() + mTime.getMilliseconds(), pendingIntent);
-                Toast.makeText(MainActivity.this, "Alarm set for " + mTime, Toast.LENGTH_SHORT).show();
-            }
-        });
+        startAlarmButton = (ToggleButton) findViewById(R.id.startAlarmButton);
         mTime = new Time();
         mClock = (TextView) findViewById(R.id.clock);
-//        mBox = (LinearLayout) findViewById(R.id.box);
-        mSeekBar = (SeekBar) findViewById(R.id.seekBar);
-        mCircularSeekBar = (CircularSeekBar) findViewById(R.id.circularSeekBar1);
-        mCircularSeekBar.setMax(60);
-        mCircularSeekBar.setCircleColor(Color.BLACK);
-        mCircularSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
+        mHourSeekBar = (CircularSeekBar) findViewById(R.id.hourSeekBar);
+        mMinuteSeekBar = (CircularSeekBar) findViewById(R.id.minuteSeekBar);
+        mMinuteSeekBar.setMax(60);
+        mHourSeekBar.setMax(24);
+        mMinuteSeekBar.setCircleColor(Color.BLACK);
+        mMinuteSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
                 mTime.minute = progress;
@@ -82,31 +66,80 @@ public class MainActivity extends ActionBarActivity {
         });
         final float[] hsvColor = {240, 1, 1};
 //        mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mHourSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            public void onProgressChanged(CircularSeekBar circularSeekBar, int i, boolean fromUser) {
 //                minuteCount = 30 * i;
-                hsvColor[0] = updateColor(i);
+//                hsvColor[0] = updateColor(i);
 //                mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
 //                mClock.setText(updateClock(i));
                 mTime.hour = i;
+                if (i == 24)
+                    mTime.hour = 0;
                 minuteCount = mTime.getMinuteCount();
                 mClock.setText(mTime.toString());
+            }
+
+            @Override
+            public void onStopTrackingTouch(CircularSeekBar seekBar) {
 
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStartTrackingTouch(CircularSeekBar seekBar) {
 
             }
         });
+//        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+////                minuteCount = 30 * i;
+////                hsvColor[0] = updateColor(i);
+////                mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
+////                mClock.setText(updateClock(i));
+//                mTime.hour = i;
+//                minuteCount = mTime.getMinuteCount();
+//                mClock.setText(mTime.toString());
+//
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//        });
     }
 
+    public void onToggleClicked(View view) {
+        boolean on = ((ToggleButton) view).isChecked();
+
+        String day = "today";
+
+        if (on) {
+            Calendar calendar = Calendar.getInstance();
+            if (mTime.getMinuteCount() < calendar.get(Calendar.MINUTE) + 60 * calendar.get(Calendar.HOUR_OF_DAY)) {
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
+                day = "tomorrow";
+            }
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, mTime.getMilliseconds());
+            Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
+            alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+            Toast.makeText(MainActivity.this, "Alarm set for " + mTime + " for " + day, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            alarmManager.cancel(pendingIntent);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
