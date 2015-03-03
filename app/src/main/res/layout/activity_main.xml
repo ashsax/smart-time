@@ -18,10 +18,11 @@
         android:text="12:00 AM"
         android:textSize="64sp"
         android:id="@+id/clock"
-        android:textColor="@color/ripple_material_dark"
+        android:textColor="#ffffff"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="45dp" />
+        android:layout_marginTop="25dp"
+        android:paddingBottom="10dp"/>
 
     <!--<LinearLayout-->
         <!--android:orientation="horizontal"-->

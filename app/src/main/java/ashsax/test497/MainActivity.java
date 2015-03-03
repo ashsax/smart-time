@@ -9,8 +9,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,19 +25,21 @@ public class MainActivity extends ActionBarActivity {
     private TextView mClock;
     private SeekBar mSeekBar;
     private Button startAlarmButton;
-//    private LinearLayout mBox;
+    private RelativeLayout mBox;
     private int minuteCount;
     private CircularSeekBar mMinuteSeekBar;
     private CircularSeekBar mHourSeekBar;
     private Time mTime;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
+    final float[] hsvColor = {240, 0.68f, 0.2f};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff005fbf));
+        mBox = (RelativeLayout) findViewById(R.id.relativeLayout);
         startAlarmButton = (ToggleButton) findViewById(R.id.startAlarmButton);
         mTime = new Time();
         mClock = (TextView) findViewById(R.id.clock);
@@ -43,7 +47,6 @@ public class MainActivity extends ActionBarActivity {
         mMinuteSeekBar = (CircularSeekBar) findViewById(R.id.minuteSeekBar);
         mMinuteSeekBar.setMax(60);
         mHourSeekBar.setMax(24);
-        mMinuteSeekBar.setCircleColor(Color.BLACK);
         mMinuteSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
@@ -64,14 +67,14 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
-        final float[] hsvColor = {240, 1, 1};
-//        mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
+        mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
         mHourSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int i, boolean fromUser) {
+                updateColor(i);
 //                minuteCount = 30 * i;
 //                hsvColor[0] = updateColor(i);
-//                mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
+                mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
 //                mClock.setText(updateClock(i));
                 mTime.hour = i;
                 if (i == 24)
@@ -148,52 +151,21 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    public float updateColor(int i) {
-        float val = (float) Math.cos((2 * Math.PI * (float) i / 48));
-        return 210 + 30f * val;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.settings:
+                Intent intentToStartSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentToStartSettings);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
-    public String updateClock(int i) {
-        if(i == 0)
-            return "12:00 AM";
-        else if(i == 1)
-            return "12:30 AM";
-        else if(i == 24)
-            return "12:00 PM";
-        else if(i == 25)
-            return "12:30 PM";
-
-
-        boolean am = true;
-
-        String time = "";
-
-        if(i >= 24){
-            am = false;
-            time += String.valueOf((i-24)/2);
-        }
-        else
-            time += String.valueOf(i/2);
-
-        time += ":";
-
-        int result = i%2;
-        if(result == 1)
-            time += "30";
-        else
-            time += "00";
-
-        if(am)
-            time += " AM";
-        else
-            time += " PM";
-
-//        time += String.valueOf(i%2);
-
-        return time;
-
-
-
+    public void updateColor(int i) {
+        float hue = (float) Math.cos((2 * Math.PI * (float) i / 24));
+        hsvColor[0] = 220 + 20f * hue;
+        hsvColor[2] = ((1 - hue)*0.35f) + 0.2f;
     }
 
 }
