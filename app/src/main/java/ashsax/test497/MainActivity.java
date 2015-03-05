@@ -2,7 +2,9 @@ package ashsax.test497;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
@@ -33,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
     final float[] hsvColor = {240, 0.68f, 0.2f};
+    private SharedPreferences mSharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,6 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff005fbf));
         mBox = (RelativeLayout) findViewById(R.id.relativeLayout);
-        startAlarmButton = (ToggleButton) findViewById(R.id.startAlarmButton);
         mTime = new Time();
         mClock = (TextView) findViewById(R.id.clock);
         mHourSeekBar = (CircularSeekBar) findViewById(R.id.hourSeekBar);
@@ -118,11 +120,25 @@ public class MainActivity extends ActionBarActivity {
 //        });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (startAlarmButton == null) {
+            startAlarmButton = (ToggleButton) findViewById(R.id.startAlarmButton);
+        }
+        if (mSharedPrefs == null) {
+            mSharedPrefs = getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
+        }
+        boolean calendarSync = mSharedPrefs.getBoolean("calendarSync", false);
+        startAlarmButton.setEnabled(!calendarSync);
+    }
+
     public void onToggleClicked(View view) {
         boolean on = ((ToggleButton) view).isChecked();
 
         String day = "today";
 
+        // set alarm based on user inputted time
         if (on) {
             Calendar calendar = Calendar.getInstance();
             if (mTime.getMinuteCount() < calendar.get(Calendar.MINUTE) + 60 * calendar.get(Calendar.HOUR_OF_DAY)) {
@@ -134,13 +150,16 @@ public class MainActivity extends ActionBarActivity {
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, mTime.getMilliseconds());
             Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
+            myIntent.putExtra("calendarSync", false);
+            // if pendingIntent already set, cancel it first before making this new one
+            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
             Toast.makeText(MainActivity.this, "Alarm set for " + mTime + " for " + day, Toast.LENGTH_SHORT).show();
         }
-        else {
+        else if (pendingIntent != null) {
             alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();
         }
     }
 
