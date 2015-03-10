@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -37,6 +38,11 @@ public class MainActivity extends ActionBarActivity {
     final float[] hsvColor = {240, 0.68f, 0.2f};
     private SharedPreferences mSharedPrefs;
 
+    private final static int maxHours = 24;
+    private final static int maxMinutes = 60;
+
+    private ImageView mImg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,14 +53,20 @@ public class MainActivity extends ActionBarActivity {
         mClock = (TextView) findViewById(R.id.clock);
         mHourSeekBar = (CircularSeekBar) findViewById(R.id.hourSeekBar);
         mMinuteSeekBar = (CircularSeekBar) findViewById(R.id.minuteSeekBar);
-        mMinuteSeekBar.setMax(60);
-        mHourSeekBar.setMax(24);
+        mMinuteSeekBar.setMax(maxMinutes);
+        mHourSeekBar.setMax(maxHours);
+
+        mImg = (ImageView) findViewById(R.id.sunmoon);
+        updateAlpha(0);
+
         mMinuteSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
                 mTime.minute = progress;
-                if (progress == 60)
+                if (progress == maxMinutes) {
                     mTime.minute = 0;
+                    mMinuteSeekBar.setProgress(0);
+                }
                 minuteCount = mTime.getMinuteCount();
                 mClock.setText(mTime.toString());
             }
@@ -74,15 +86,22 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int i, boolean fromUser) {
                 updateColor(i);
-//                minuteCount = 30 * i;
-//                hsvColor[0] = updateColor(i);
                 mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
-//                mClock.setText(updateClock(i));
+
                 mTime.hour = i;
-                if (i == 24)
+                if (i == maxHours) {
                     mTime.hour = 0;
+                    mHourSeekBar.setProgress(0);
+                }
                 minuteCount = mTime.getMinuteCount();
                 mClock.setText(mTime.toString());
+
+                if(i > 6 && i <= 18)
+                    mImg.setImageResource(R.drawable.sun);
+                else
+                    mImg.setImageResource(R.drawable.moon);
+
+                updateAlpha(i);
             }
 
             @Override
@@ -182,9 +201,14 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void updateColor(int i) {
-        float hue = (float) Math.cos((2 * Math.PI * (float) i / 24));
+        float hue = (float) Math.cos((2 * Math.PI * (float) i / maxHours));
         hsvColor[0] = 220 + 20f * hue;
         hsvColor[2] = ((1 - hue)*0.35f) + 0.2f;
+    }
+
+    public void updateAlpha(int i){
+        int alpha = 120 + 80 * Math.round((float) Math.cos((4 * Math.PI * (float) i / maxHours)));
+        mImg.setImageAlpha(alpha);
     }
 
 }

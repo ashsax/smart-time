@@ -47,7 +47,10 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             app1:lock_enabled="false"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            app1:move_outside_circle="true"
+            app1:circle_color="#905F5E75"
+            app1:circle_progress_color="#503B35DE"/>
 
         <ashsax.test497.CircularSeekBar
             android:id="@+id/hourSeekBar"
@@ -55,7 +58,18 @@
             android:layout_height="wrap_content"
             app1:end_angle="270"
             app1:lock_enabled="false"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            app1:move_outside_circle="true"
+            app1:circle_color="#905F5E75"
+            app1:circle_progress_color="#503B35DE"/>
+
+        <ImageView
+            android:id="@+id/sunmoon"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/moon"
+            android:layout_centerInParent="true"
+            />
 
     </RelativeLayout>
 

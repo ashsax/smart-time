@@ -22,17 +22,17 @@ public class Time {
     }
 
     public String toString(){
-        am = true;
-        if(hour > 11)
-            am = false;
-
         int result = hour%12;
         String hourStr = String.valueOf(result);
         if(result == 0)
             hourStr = "12";
 
+        if(hourStr.length() == 1)
+            hourStr = "  " + hourStr;
+
+
         String ampm = " PM";
-        if(am)
+        if(hour <= 11)
             ampm = " AM";
 
         String timeStr = hourStr+":";

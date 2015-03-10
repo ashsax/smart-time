@@ -95,44 +95,14 @@ public class SettingsActivity extends ActionBarActivity {
                         pendingIntent.cancel();
                     }
 
-                    // begin querying calendar
-                    final String[] EVENT_PROJECTION = new String[] {
-                            CalendarContract.Events.TITLE,
-                            CalendarContract.Events.DTSTART
-                    };
-
-                    final int TITLE_INDEX = 0;
-                    final int DTSTART_INDEX = 1;
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, 0);
-                    calendar.set(Calendar.MINUTE, 0);
-                    calendar.set(Calendar.SECOND, 0);
-                    calendar.add(Calendar.DAY_OF_YEAR, 1);
-                    long startTomorrow = calendar.getTimeInMillis();
-                    calendar.add(Calendar.DAY_OF_YEAR, 1);
-                    long endTomorrow = calendar.getTimeInMillis();
-
-                    Uri.Builder builder = CalendarContract.Instances.CONTENT_URI.buildUpon();
-                    ContentUris.appendId(builder, startTomorrow);
-                    ContentUris.appendId(builder, endTomorrow);
-                    Uri uri = builder.build();
-
-                    Cursor cursor = getContentResolver().query(uri, EVENT_PROJECTION, null, null, null);
-                    cursor.moveToFirst();
-
-                    Format df = DateFormat.getDateFormat(SettingsActivity.this);
-                    Format tf = DateFormat.getTimeFormat(SettingsActivity.this);
-
-                    // if there are no events, say so and be done.
-                    if (cursor.getCount() == 0) {
-                        Toast.makeText(SettingsActivity.this, "No events tomorrow!", Toast.LENGTH_SHORT).show();
+                    Long start;
+                    try {
+                        start = Utility.getAlarmTime(SettingsActivity.this);
+                    }
+                    catch (Exception e) {
                         return;
                     }
-
-                    // otherwise set alarm for tomorrow, based on spinner value corresponding to time needed to wake up
-                    String title = cursor.getString(TITLE_INDEX);
-                    Long start = cursor.getLong(DTSTART_INDEX);
+//                    Toast.makeText(SettingsActivity.this, "cal is set to " + df.format(start) + " at " + tf.format(start), Toast.LENGTH_SHORT).show();
 
                     myIntent = new Intent(SettingsActivity.this, AlarmReceiver.class);
                     myIntent.putExtra("calendarSync", true);
@@ -142,8 +112,16 @@ public class SettingsActivity extends ActionBarActivity {
                     // time needed to wake up in milliseconds
                     int timeNeededToWakeUp = (mSpinner.getSelectedItemPosition() + 1) * 30 * 60 * 1000;
                     Long alarmTime = start - timeNeededToWakeUp;
-                    alarmManager.set(AlarmManager.RTC, alarmTime, pendingIntent);
+
+                    if(alarmTime > Calendar.getInstance().getTimeInMillis())
+                        alarmManager.set(AlarmManager.RTC, alarmTime, pendingIntent);
+
+                    Format df = DateFormat.getDateFormat(SettingsActivity.this);
+                    Format tf = DateFormat.getTimeFormat(SettingsActivity.this);
+
                     Toast.makeText(SettingsActivity.this, "Alarm set for " + tf.format(alarmTime) + " for tomorrow", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(SettingsActivity.this, "Alarm set for "+ (alarmTime - Calendar.getInstance().getTimeInMillis()), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(SettingsActivity.this, "Alarm set for " + df.format(alarmTime) + " at " + tf.format(alarmTime), Toast.LENGTH_SHORT).show();
 
 //                    Toast.makeText(SettingsActivity.this, title + " on " + df.format(start) + " at " + tf.format(start), Toast.LENGTH_SHORT).show();
                 }

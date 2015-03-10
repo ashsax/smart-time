@@ -55,41 +55,13 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements MediaPlay
 
         // if calendarSync is on, then set the alarm for the next day as well
         if (intent.getBooleanExtra("calendarSync", false)) {
-            final String[] EVENT_PROJECTION = new String[] {
-                    CalendarContract.Events.TITLE,
-                    CalendarContract.Events.DTSTART
-            };
-
-            final int TITLE_INDEX = 0;
-            final int DTSTART_INDEX = 1;
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            long startTomorrow = calendar.getTimeInMillis();
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            long endTomorrow = calendar.getTimeInMillis();
-
-            Uri.Builder builder = CalendarContract.Instances.CONTENT_URI.buildUpon();
-            ContentUris.appendId(builder, startTomorrow);
-            ContentUris.appendId(builder, endTomorrow);
-            Uri uri = builder.build();
-
-            Cursor cursor = context.getContentResolver().query(uri, EVENT_PROJECTION, null, null, null);
-            cursor.moveToFirst();
-
-            Format df = DateFormat.getDateFormat(context);
-            Format tf = DateFormat.getTimeFormat(context);
-
-            if (cursor.getCount() == 0) {
-                Log.d("AlarmReceiver", "No events tomorrow!");
+            Long start;
+            try {
+                start = Utility.getAlarmTime(context);
+            }
+            catch (Exception e) {
                 return;
             }
-
-            String title = cursor.getString(TITLE_INDEX);
-            Long start = cursor.getLong(DTSTART_INDEX);
 
             Intent myIntent = new Intent(context, AlarmReceiver.class);
             myIntent.putExtra("calendarSync", true);
@@ -100,8 +72,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements MediaPlay
             SharedPreferences sharedPrefs = context.getSharedPreferences("timePrefs", Context.MODE_PRIVATE);
             int timeNeededToWakeUp = (sharedPrefs.getInt("spinnerIndex", 0) + 1) * 30 * 60 * 1000;
             Long alarmTime = start - timeNeededToWakeUp;
-            alarmManager.set(AlarmManager.RTC, alarmTime, pendingIntent);
-            Log.d("AlarmReceiver", "Alarm set for " + tf.format(alarmTime) + " for tomorrow");
+//            alarmManager.set(AlarmManager.RTC, alarmTime, pendingIntent);
+//            Log.d("AlarmReceiver", "Alarm set for " + tf.format(alarmTime) + " on " + df.format(alarmTime));
+//            Log.d("AlarmReceiver", "Alarm set for " + tf.format(alarmTime) + " for tomorrow");
 
 //            Log.d("AlarmReceiver", title + " on " + df.format(start) + " at " + tf.format(start));
         }
