@@ -53,13 +53,35 @@ public class Utility {
         String title = cursor.getString(TITLE_INDEX);
         Long start = cursor.getLong(DTSTART_INDEX);
 
-        // fixes problem with recurring events
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(start);
         Calendar tomorrow = Calendar.getInstance();
         tomorrow.add(Calendar.DAY_OF_YEAR, 1);
         cal.set(Calendar.DAY_OF_YEAR, tomorrow.get(Calendar.DAY_OF_YEAR));
         start = cal.getTimeInMillis();
+
+        while (cursor.moveToNext()) {
+            Long temp_start = cursor.getLong(DTSTART_INDEX);
+            Calendar cal1 = Calendar.getInstance();
+            cal1.setTimeInMillis(temp_start);
+            Calendar tomorrow1 = Calendar.getInstance();
+            tomorrow1.add(Calendar.DAY_OF_YEAR, 1);
+            cal1.set(Calendar.DAY_OF_YEAR, tomorrow1.get(Calendar.DAY_OF_YEAR));
+            temp_start = cal1.getTimeInMillis();
+
+            if (temp_start < start) {
+                start = temp_start;
+                title = cursor.getString(TITLE_INDEX);
+            }
+        }
+
+        // fixes problem with recurring events
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTimeInMillis(start);
+//        Calendar tomorrow = Calendar.getInstance();
+//        tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+//        cal.set(Calendar.DAY_OF_YEAR, tomorrow.get(Calendar.DAY_OF_YEAR));
+//        start = cal.getTimeInMillis();
         return start;
     }
 
