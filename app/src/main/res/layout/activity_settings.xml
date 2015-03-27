@@ -16,25 +16,35 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Time needed to get ready"
-        android:id="@+id/textView"
-        android:textSize="18dp"
-        android:layout_below="@+id/calendarSyncSwitch"
-        android:layout_alignParentLeft="true"
-        android:paddingTop="20dp"
-        android:paddingLeft="10dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/calendarSyncSwitch">
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_below="@+id/calendarSyncSwitch"
-        android:layout_alignParentRight="true"
-        android:layout_alignBottom="@id/textView"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Minutes needed to get ready"
+            android:id="@+id/textView"
+            android:textSize="18dp"
+
+            android:layout_alignParentLeft="true"
+            android:paddingTop="20dp"
+            android:paddingLeft="10dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="5"
+            android:id="@+id/editText"
+            android:text="30"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="54dp"
+            android:layout_marginLeft="2dp"/>
+    </LinearLayout>
+
 
 </RelativeLayout>

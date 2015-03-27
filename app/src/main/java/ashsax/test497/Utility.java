@@ -26,11 +26,7 @@ public class Utility {
         final int TITLE_INDEX = 0;
         final int DTSTART_INDEX = 1;
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Calendar calendar = getStartOfTomorrow();
         long startTomorrow = calendar.getTimeInMillis();
         calendar.add(Calendar.DAY_OF_YEAR, 1);
         long endTomorrow = calendar.getTimeInMillis();
@@ -83,6 +79,17 @@ public class Utility {
 //        cal.set(Calendar.DAY_OF_YEAR, tomorrow.get(Calendar.DAY_OF_YEAR));
 //        start = cal.getTimeInMillis();
         return start;
+    }
+
+    public static Calendar getStartOfTomorrow() {
+        Calendar tomorrow = Calendar.getInstance();
+        tomorrow.set(Calendar.HOUR_OF_DAY, 0);
+        tomorrow.set(Calendar.MINUTE, 0);
+        tomorrow.set(Calendar.SECOND, 0);
+        tomorrow.set(Calendar.MILLISECOND, 0);
+        tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+
+        return tomorrow;
     }
 
 }

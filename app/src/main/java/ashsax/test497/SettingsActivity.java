@@ -13,11 +13,13 @@ import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -29,7 +31,6 @@ public class SettingsActivity extends ActionBarActivity {
 
     private SharedPreferences mCalendarPrefs;
     private SharedPreferences mTimePrefs;
-    private Spinner mSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,29 +39,10 @@ public class SettingsActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff005fbf));
 
-        mSpinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.wakeup_times, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(adapter);
 
         mTimePrefs = getSharedPreferences("timePrefs", Context.MODE_PRIVATE);
-
-        // We need to save spinnerIndex -> used to calculate how much time is needed to wake up.
-        // This is used in AlarmReceiver when setting the calendar alarm for the next day
-        // (only if calendarSync is on).
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                SharedPreferences.Editor editor = mTimePrefs.edit();
-                editor.putInt("spinnerIndex", i);
-                editor.apply();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         mCalendarPrefs = getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
         boolean calendarSync = mCalendarPrefs.getBoolean("calendarSync", false);
@@ -102,24 +84,33 @@ public class SettingsActivity extends ActionBarActivity {
                     catch (Exception e) {
                         return;
                     }
-//                    Toast.makeText(SettingsActivity.this, "cal is set to " + df.format(start) + " at " + tf.format(start), Toast.LENGTH_SHORT).show();
 
                     myIntent = new Intent(SettingsActivity.this, AlarmReceiver.class);
                     myIntent.putExtra("calendarSync", true);
                     // if pendingIntent already set, cancel it first before making this new one
                     pendingIntent = PendingIntent.getBroadcast(SettingsActivity.this, 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
                     // time needed to wake up in milliseconds
-                    int timeNeededToWakeUp = (mSpinner.getSelectedItemPosition() + 1) * 30 * 60 * 1000;
+                    EditText editText = (EditText) findViewById(R.id.editText);
+                    int timeNeededToWakeUp = Integer.parseInt( editText.getText().toString() ) * 60 * 1000;
                     Long alarmTime = start - timeNeededToWakeUp;
 
-                    if(alarmTime > Calendar.getInstance().getTimeInMillis())
-                        alarmManager.set(AlarmManager.RTC, alarmTime, pendingIntent);
+                    String day = "tomorrow";
+                    long startOfTomorrow = Utility.getStartOfTomorrow().getTimeInMillis();
+                    if(alarmTime < startOfTomorrow)
+                        day = "today";
+
+                    if(alarmTime <= Calendar.getInstance().getTimeInMillis()){
+                        Toast.makeText(SettingsActivity.this, "Cannot set alarm for the past", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    alarmManager.set(AlarmManager.RTC, alarmTime, pendingIntent);
 
                     Format df = DateFormat.getDateFormat(SettingsActivity.this);
                     Format tf = DateFormat.getTimeFormat(SettingsActivity.this);
 
-                    Toast.makeText(SettingsActivity.this, "Alarm set for " + tf.format(alarmTime) + " for tomorrow", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "Alarm set for " + tf.format(alarmTime) + " for " + day, Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(SettingsActivity.this, "Alarm set for "+ (alarmTime - Calendar.getInstance().getTimeInMillis()), Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(SettingsActivity.this, "Alarm set for " + df.format(alarmTime) + " at " + tf.format(alarmTime), Toast.LENGTH_SHORT).show();
 
