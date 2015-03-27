@@ -1,185 +1,78 @@
 package ashsax.test497;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar.TabListener;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import java.util.Calendar;
+public class MainActivity extends ActionBarActivity implements TabListener {
 
-public class MainActivity extends ActionBarActivity {
+    AppSectionsPagerAdapter mAppSectionsPagerAdapter;
 
-    private TextView mClock;
-    private SeekBar mSeekBar;
-    private Button startAlarmButton;
-    private RelativeLayout mBox;
-    private int minuteCount;
-    private CircularSeekBar mMinuteSeekBar;
-    private CircularSeekBar mHourSeekBar;
-    private Time mTime;
-    private AlarmManager alarmManager;
-    private PendingIntent pendingIntent;
-    final float[] hsvColor = {240, 0.68f, 0.2f};
-    private SharedPreferences mSharedPrefs;
-
-    private final static int maxHours = 24;
-    private final static int maxMinutes = 60;
-
-    private ImageView mImg;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff005fbf));
-        mBox = (RelativeLayout) findViewById(R.id.relativeLayout);
-        mTime = new Time();
-        mClock = (TextView) findViewById(R.id.clock);
-        mHourSeekBar = (CircularSeekBar) findViewById(R.id.hourSeekBar);
-        mMinuteSeekBar = (CircularSeekBar) findViewById(R.id.minuteSeekBar);
-        mMinuteSeekBar.setMax(maxMinutes);
-        mHourSeekBar.setMax(maxHours);
 
-        mImg = (ImageView) findViewById(R.id.sunmoon);
-        updateAlpha(0);
+        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 
-        mMinuteSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
+        actionBar.setBackgroundDrawable(new ColorDrawable(0xff005fbf));
+
+        // Create the adapter that will return a fragment for each of the three primary sections
+        // of the app.
+        mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
+        // user swipes between sections.
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mAppSectionsPagerAdapter);
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
-            public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
-                mTime.minute = progress;
-                if (progress == maxMinutes) {
-                    mTime.minute = 0;
-                    mMinuteSeekBar.setProgress(0);
-                }
-                minuteCount = mTime.getMinuteCount();
-                mClock.setText(mTime.toString());
-            }
-
-            @Override
-            public void onStopTrackingTouch(CircularSeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(CircularSeekBar seekBar) {
-
+            public void onPageSelected(int position) {
+                // When swiping between different app sections, select the corresponding tab.
+                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
+                // Tab.
+                actionBar.setSelectedNavigationItem(position);
             }
         });
-        mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
-        mHourSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(CircularSeekBar circularSeekBar, int i, boolean fromUser) {
-                updateColor(i);
-                mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
 
-                mTime.hour = i;
-                if (i == maxHours) {
-                    mTime.hour = 0;
-                    mHourSeekBar.setProgress(0);
-                }
-                minuteCount = mTime.getMinuteCount();
-                mClock.setText(mTime.toString());
+        // For each of the sections in the app, add a tab to the action bar.
+        for (int i = 0; i < mAppSectionsPagerAdapter.getCount(); i++) {
+            // Create a tab with text corresponding to the page title defined by the adapter.
+            // Also specify this Activity object, which implements the TabListener interface, as the
+            // listener for when this tab is selected.
+            actionBar.addTab(
+                    actionBar.newTab()
+                            .setText(mAppSectionsPagerAdapter.getPageTitle(i))
+                            .setTabListener(this));
+        }
 
-                if(i > 6 && i <= 18)
-                    mImg.setImageResource(R.drawable.sun);
-                else
-                    mImg.setImageResource(R.drawable.moon);
-
-                updateAlpha(i);
-            }
-
-            @Override
-            public void onStopTrackingTouch(CircularSeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(CircularSeekBar seekBar) {
-
-            }
-        });
-//        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-////                minuteCount = 30 * i;
-////                hsvColor[0] = updateColor(i);
-////                mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
-////                mClock.setText(updateClock(i));
-//                mTime.hour = i;
-//                minuteCount = mTime.getMinuteCount();
-//                mClock.setText(mTime.toString());
-//
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//        });
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (startAlarmButton == null) {
-            startAlarmButton = (ToggleButton) findViewById(R.id.startAlarmButton);
-        }
-        if (mSharedPrefs == null) {
-            mSharedPrefs = getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
-        }
-        boolean calendarSync = mSharedPrefs.getBoolean("calendarSync", false);
-        startAlarmButton.setEnabled(!calendarSync);
+    public void onTabSelected(android.support.v7.app.ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+        mViewPager.setCurrentItem(tab.getPosition());
     }
 
-    public void onToggleClicked(View view) {
-        boolean on = ((ToggleButton) view).isChecked();
+    @Override
+    public void onTabUnselected(android.support.v7.app.ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
 
-        String day = "today";
+    }
 
-        // set alarm based on user inputted time
-        if (on) {
-            Calendar calendar = Calendar.getInstance();
-            if (mTime.getMinuteCount() < calendar.get(Calendar.MINUTE) + 60 * calendar.get(Calendar.HOUR_OF_DAY)) {
-                calendar.add(Calendar.DAY_OF_YEAR, 1);
-                day = "tomorrow";
-            }
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, mTime.getMilliseconds());
-            Intent myIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-            myIntent.putExtra("calendarSync", false);
-            // if pendingIntent already set, cancel it first before making this new one
-            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
-            Toast.makeText(MainActivity.this, "Alarm set for " + mTime + " for " + day, Toast.LENGTH_SHORT).show();
-        }
-        else if (pendingIntent != null) {
-            alarmManager.cancel(pendingIntent);
-            pendingIntent.cancel();
-        }
+    @Override
+    public void onTabReselected(android.support.v7.app.ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
+
     }
 
     @Override
@@ -200,15 +93,31 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateColor(int i) {
-        float hue = (float) Math.cos((2 * Math.PI * (float) i / maxHours));
-        hsvColor[0] = 220 + 20f * hue;
-        hsvColor[2] = ((1 - hue)*0.35f) + 0.2f;
-    }
+    public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
-    public void updateAlpha(int i){
-        int alpha = 120 + 80 * Math.round((float) Math.cos((4 * Math.PI * (float) i / maxHours)));
-        mImg.setImageAlpha(alpha);
+        public AppSectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            switch(i) {
+                case 0:
+                    return new AlarmFragment();
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Section " + (position + 1);
+        }
     }
 
 }
