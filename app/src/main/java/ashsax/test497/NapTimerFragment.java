@@ -1,12 +1,29 @@
 package ashsax.test497;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import java.util.Calendar;
 
 
 /**
@@ -18,6 +35,21 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class NapTimerFragment extends Fragment {
+
+    private TextView mClock;
+    private Button startAlarmButton;
+    private RelativeLayout mBox;
+    private CircularSeekBar mNapSeekBar;
+    private NapTimer mNapTimer;
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
+    final float[] hsvColor = {240, 0.68f, 0.2f};
+    private SharedPreferences mSharedPrefs;
+
+    private final static int maxNap = 24;
+
+    private ImageView mImg;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -66,6 +98,128 @@ public class NapTimerFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_nap_timer, container, false);
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mBox = (RelativeLayout) getActivity().findViewById(R.id.relativeLayout2);
+        mNapTimer = new NapTimer();
+        mClock = (TextView) getActivity().findViewById(R.id.timer);
+        startAlarmButton = (ToggleButton) getActivity().findViewById(R.id.startTimerButton);
+        mNapSeekBar = (CircularSeekBar) getActivity().findViewById(R.id.napSeekBar);
+        mNapSeekBar.setMax(maxNap);
+
+        mImg = (ImageView) getActivity().findViewById(R.id.zzz);
+        updateZZZ(0);
+
+        updateColor(10);
+        mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
+
+        mNapSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
+                updateZZZ(progress);
+
+                mNapTimer.minutes = progress * 5;
+                if (progress == maxNap) {
+                    mNapSeekBar.setProgress(0);
+                    mImg.setImageResource(R.drawable.z0);
+                }
+                mClock.setText(mNapTimer.toString());
+            }
+
+            @Override
+            public void onStopTrackingTouch(CircularSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(CircularSeekBar seekBar) {
+
+            }
+        });
+
+        startAlarmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean on = ((ToggleButton) view).isChecked();
+
+                // set alarm based on user inputted time
+                if (on) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.MILLISECOND, mNapTimer.getMilliseconds());
+
+                    Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
+                    myIntent.putExtra("calendarSync", false);
+                    // if pendingIntent already set, cancel it first before making this new one
+                    pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    alarmManager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+                    Toast.makeText(getActivity(), "Alarm set for " + mNapTimer.getMinuteCount() + " minutes from now", Toast.LENGTH_SHORT).show();
+                }
+                else if (pendingIntent != null) {
+                    alarmManager.cancel(pendingIntent);
+                    pendingIntent.cancel();
+                }
+            }
+        });
+    }
+
+    public void updateColor(int i) {
+        float hue = (float) Math.cos((2 * Math.PI * (float) i / maxNap));
+        hsvColor[0] = 220 + 20f * hue;
+        hsvColor[2] = ((1 - hue)*0.35f) + 0.2f;
+    }
+
+    public void updateZZZ(int i){
+        if(i > 24 || i < 0)
+            return;
+
+        final int resImages[] = {
+                R.drawable.z0,
+                R.drawable.z1,
+                R.drawable.z2,
+                R.drawable.z3,
+                R.drawable.z4,
+                R.drawable.z5,
+                R.drawable.z6,
+                R.drawable.z7,
+                R.drawable.z8,
+                R.drawable.z9,
+                R.drawable.z10,
+                R.drawable.z11,
+                R.drawable.z12,
+                R.drawable.z13,
+                R.drawable.z14,
+                R.drawable.z15,
+                R.drawable.z16,
+                R.drawable.z17,
+                R.drawable.z18,
+                R.drawable.z19,
+                R.drawable.z20,
+                R.drawable.z21,
+                R.drawable.z22,
+                R.drawable.z23,
+                R.drawable.z24  };
+
+        mImg.setImageResource(resImages[i]);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (startAlarmButton == null) {
+            startAlarmButton = (ToggleButton) getActivity().findViewById(R.id.startAlarmButton);
+        }
+        if (mSharedPrefs == null) {
+            mSharedPrefs = getActivity().getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
+        }
+        boolean calendarSync = mSharedPrefs.getBoolean("calendarSync", false);
+        startAlarmButton.setEnabled(!calendarSync);
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
