@@ -2,27 +2,17 @@ package ashsax.test497;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -42,16 +32,10 @@ public class SettingsActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff005fbf));
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.wakeup_times, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         mTimePrefs = getSharedPreferences("timePrefs", Context.MODE_PRIVATE);
-        String minutesNeededPreset = mTimePrefs.getString("minutesPreset", "30");
+        int timeNeededToGetReady = mTimePrefs.getInt("timeNeededToGetReady", 30);
         final EditText editText = (EditText) findViewById(R.id.editText);
-        editText.setText(minutesNeededPreset);
-        editText.setOnClickListener(
-
-        );
+        editText.setText(timeNeededToGetReady);
 
         mCalendarPrefs = getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
         boolean calendarSync = mCalendarPrefs.getBoolean("calendarSync", false);
@@ -103,6 +87,9 @@ public class SettingsActivity extends ActionBarActivity {
                     // time needed to wake up in milliseconds
 
                     String minutesNeeded = editText.getText().toString();
+                    editor = mTimePrefs.edit();
+                    editor.putInt("timeNeededToGetReady", Integer.parseInt(minutesNeeded));
+                    editor.apply();
                     int timeNeededToWakeUp = Integer.parseInt( minutesNeeded ) * 60 * 1000;
 
                     Long alarmTime = start - timeNeededToWakeUp;
