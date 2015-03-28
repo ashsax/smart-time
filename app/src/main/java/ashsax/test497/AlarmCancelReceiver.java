@@ -11,6 +11,7 @@ import android.util.Log;
 public class AlarmCancelReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        /* RANDOM COMMENT */
         if (AlarmFragment.mManualPendingIntent != null) {
             MainActivity.mAlarmManager.cancel(AlarmFragment.mManualPendingIntent);
             AlarmFragment.mManualPendingIntent.cancel();
