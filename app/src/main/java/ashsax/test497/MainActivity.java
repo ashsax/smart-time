@@ -3,6 +3,7 @@ package ashsax.test497;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,6 +29,7 @@ public class MainActivity extends ActionBarActivity implements TabListener {
         final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 
         actionBar.setBackgroundDrawable(new ColorDrawable(0xff005fbf));
+        actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#ff005fbf")));
 
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
@@ -74,7 +76,7 @@ public class MainActivity extends ActionBarActivity implements TabListener {
     public void onTabReselected(android.support.v7.app.ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
 
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -91,7 +93,7 @@ public class MainActivity extends ActionBarActivity implements TabListener {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
