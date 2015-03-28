@@ -42,7 +42,7 @@
 
         <ashsax.test497.CircularSeekBar
             android:id="@+id/minuteSeekBar"
-            android:layout_width="290dp"
+            android:layout_width="291dp"
             android:layout_height="wrap_content"
             app1:lock_enabled="false"
             android:layout_centerInParent="true"
@@ -60,6 +60,15 @@
             app1:move_outside_circle="true"
             app1:circle_color="#80808080"
             app1:circle_progress_color="#503B35DE"/>
+
+        <!--<ImageView-->
+            <!--android:id="@+id/clockbg"-->
+            <!--android:layout_width="350dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:src="@drawable/clock3"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:alpha="0.6"-->
+            <!--/>-->
 
         <ImageView
             android:id="@+id/sunmoon"
