@@ -113,12 +113,17 @@ public class NapTimerFragment extends Fragment {
         mImg = (ImageView) getActivity().findViewById(R.id.zzz);
         updateZZZ(0);
 
-        updateColor(10);
+        Calendar cal = Calendar.getInstance();
+        updateColor(cal.get(Calendar.HOUR_OF_DAY));
         mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
 
         mNapSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
+                Calendar cal = Calendar.getInstance();
+                updateColor(cal.get(Calendar.HOUR_OF_DAY));
+                mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
+
                 updateZZZ(progress);
 
                 mNapTimer.minutes = progress * 5;

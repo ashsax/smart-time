@@ -22,7 +22,7 @@ public class NapTimer {
         if(minutes%60 < 10)
             minuteStr = "0"+minuteStr;
 
-        return hourStr+":"+minuteStr;
+        return hourStr+"h "+minuteStr+"m";
     }
 
     public int getMinuteCount() {

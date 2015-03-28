@@ -21,34 +21,34 @@
         android:textColor="#ffffff"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-2dp"
+        android:layout_marginTop="-7dp"
         android:paddingBottom="0dp"/>
 
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         android:layout_below="@+id/clock"
-        android:id="@+id/circleLayout">
+        android:id="@+id/circleLayout"
+        android:layout_marginTop="0dp">
 
         <ImageView
-            android:id="@+id/clockbg"
-            android:layout_width="350dp"
+            android:layout_width="275dp"
             android:layout_height="match_parent"
             android:src="@drawable/clock3"
             android:layout_centerInParent="true"
-            android:alpha="0.6"
+            android:alpha="0.7"
             android:rotation="1.5"
             />
 
         <ashsax.test497.CircularSeekBar
             android:id="@+id/minuteSeekBar"
-            android:layout_width="291dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             app1:lock_enabled="false"
             android:layout_centerInParent="true"
             app1:move_outside_circle="true"
-            app1:circle_color="#90CCCCCC"
+            app1:circle_color="#C0CCCCCC"
             app1:circle_progress_color="#503B35DE"/>
 
         <ashsax.test497.CircularSeekBar
@@ -59,7 +59,7 @@
             app1:lock_enabled="false"
             android:layout_centerInParent="true"
             app1:move_outside_circle="true"
-            app1:circle_color="#90CCCCCC"
+            app1:circle_color="#C0CCCCCC"
             app1:circle_progress_color="#503B35DE"/>
 
         <ImageView
@@ -81,6 +81,6 @@
         android:id="@+id/startAlarmButton"
         android:layout_below="@+id/circleLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"/>
+        android:layout_marginTop="5dp"/>
 
 </RelativeLayout>
