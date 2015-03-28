@@ -44,8 +44,8 @@ public class AlarmFragment extends Fragment {
     private CircularSeekBar mMinuteSeekBar;
     private CircularSeekBar mHourSeekBar;
     private Time mTime;
-    private AlarmManager alarmManager;
-    private PendingIntent pendingIntent;
+    public static PendingIntent mCalendarPendingIntent;
+    public static PendingIntent mManualPendingIntent;
     final float[] hsvColor = {240, 0.68f, 0.2f};
     private SharedPreferences mSharedPrefs;
 
@@ -196,14 +196,14 @@ public class AlarmFragment extends Fragment {
                     Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
                     myIntent.putExtra("calendarSync", false);
                     // if pendingIntent already set, cancel it first before making this new one
-                    pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                    alarmManager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
-                    alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+                    mManualPendingIntent = PendingIntent.getBroadcast(MainActivity.mAlarmContext, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    MainActivity.mAlarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), mManualPendingIntent);
                     Toast.makeText(getActivity(), "Alarm set for " + mTime + " for " + day, Toast.LENGTH_SHORT).show();
                 }
-                else if (pendingIntent != null) {
-                    alarmManager.cancel(pendingIntent);
-                    pendingIntent.cancel();
+                else if (mManualPendingIntent != null) {
+                    MainActivity.mAlarmManager.cancel(mManualPendingIntent);
+                    mManualPendingIntent.cancel();
+                    AlarmReceiver.mediaPlayer.stop();
                 }
             }
         });

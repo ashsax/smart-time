@@ -1,7 +1,9 @@
 package ashsax.test497;
 
 import android.app.ActionBar;
+import android.app.AlarmManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -17,6 +19,9 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity implements TabListener {
 
+    public static AlarmManager mAlarmManager;
+    public static Context mAlarmContext;
+
     AppSectionsPagerAdapter mAppSectionsPagerAdapter;
 
     private ViewPager mViewPager;
@@ -25,6 +30,9 @@ public class MainActivity extends ActionBarActivity implements TabListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        mAlarmContext = this;
 
         final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 

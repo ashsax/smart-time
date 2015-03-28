@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,6 +94,8 @@ public class SettingsFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mTimePrefs = getActivity().getSharedPreferences("timePrefs", Context.MODE_PRIVATE);
+        final EditText editText = (EditText) getActivity().findViewById(R.id.editText);
+        editText.setText("" + mTimePrefs.getInt("timeNeededToGetReady", 30));
 
         mCalendarPrefs = getActivity().getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
         boolean calendarSync = mCalendarPrefs.getBoolean("calendarSync", false);
@@ -106,13 +109,10 @@ public class SettingsFragment extends Fragment {
                 editor.apply();
                 // if calendarSync is switched off, then cancel the calendar alarm previously set
                 if (!b) {
-                    Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
-                    myIntent.putExtra("calendarSync", false);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_NO_CREATE);
-                    if (pendingIntent != null) {
-                        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
-                        alarmManager.cancel(pendingIntent);
-                        pendingIntent.cancel();
+                    if (AlarmFragment.mCalendarPendingIntent != null) {
+                        MainActivity.mAlarmManager.cancel(AlarmFragment.mCalendarPendingIntent);
+                        AlarmFragment.mCalendarPendingIntent.cancel();
+                        AlarmReceiver.mediaPlayer.stop();
                     }
                     Toast.makeText(getActivity(), "Alarm previously set by calendar cancelled", Toast.LENGTH_SHORT).show();
                 }
@@ -120,11 +120,11 @@ public class SettingsFragment extends Fragment {
                     // cancel previous calendar alarm
                     Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
                     myIntent.putExtra("calendarSync", true);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_NO_CREATE);
-                    if (pendingIntent != null) {
-                        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
-                        alarmManager.cancel(pendingIntent);
-                        pendingIntent.cancel();
+                    AlarmFragment.mCalendarPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    if (AlarmFragment.mCalendarPendingIntent != null) {
+                        MainActivity.mAlarmManager.cancel(AlarmFragment.mCalendarPendingIntent);
+                        AlarmFragment.mCalendarPendingIntent.cancel();
+                        AlarmReceiver.mediaPlayer.stop();
                     }
 
                     Long start;
@@ -138,11 +138,14 @@ public class SettingsFragment extends Fragment {
                     myIntent = new Intent(getActivity(), AlarmReceiver.class);
                     myIntent.putExtra("calendarSync", true);
                     // if pendingIntent already set, cancel it first before making this new one
-                    pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                    AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
+                    AlarmFragment.mCalendarPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     // time needed to wake up in milliseconds
-                    EditText editText = (EditText) getActivity().findViewById(R.id.editText);
+                    editor = mTimePrefs.edit();
+                    String minutesNeeded = editText.getText().toString();
+                    Log.v("SettingsFragment", minutesNeeded);
+                    editor.putInt("timeNeededToGetReady", Integer.parseInt(minutesNeeded));
+                    editor.apply();
                     int timeNeededToWakeUp = Integer.parseInt( editText.getText().toString() ) * 60 * 1000;
                     Long alarmTime = start - timeNeededToWakeUp;
 
@@ -155,7 +158,7 @@ public class SettingsFragment extends Fragment {
                         Toast.makeText(getActivity(), "Cannot set alarm for the past", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    alarmManager.set(AlarmManager.RTC, alarmTime, pendingIntent);
+                    MainActivity.mAlarmManager.set(AlarmManager.RTC, alarmTime, AlarmFragment.mCalendarPendingIntent);
 
                     Format df = DateFormat.getDateFormat(getActivity());
                     Format tf = DateFormat.getTimeFormat(getActivity());
