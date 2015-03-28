@@ -27,10 +27,6 @@ public class Time {
         if(result == 0)
             hourStr = "12";
 
-        if(hourStr.length() == 1)
-            hourStr = "  " + hourStr;
-
-
         String ampm = " PM";
         if(hour <= 11)
             ampm = " AM";

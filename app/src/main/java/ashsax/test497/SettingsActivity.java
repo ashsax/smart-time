@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
@@ -31,6 +33,7 @@ public class SettingsActivity extends ActionBarActivity {
 
     private SharedPreferences mCalendarPrefs;
     private SharedPreferences mTimePrefs;
+//    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,12 @@ public class SettingsActivity extends ActionBarActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mTimePrefs = getSharedPreferences("timePrefs", Context.MODE_PRIVATE);
+        String minutesNeededPreset = mTimePrefs.getString("minutesPreset", "30");
+        final EditText editText = (EditText) findViewById(R.id.editText);
+        editText.setText(minutesNeededPreset);
+        editText.setOnClickListener(
+
+        );
 
         mCalendarPrefs = getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
         boolean calendarSync = mCalendarPrefs.getBoolean("calendarSync", false);
@@ -92,8 +101,10 @@ public class SettingsActivity extends ActionBarActivity {
                     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
                     // time needed to wake up in milliseconds
-                    EditText editText = (EditText) findViewById(R.id.editText);
-                    int timeNeededToWakeUp = Integer.parseInt( editText.getText().toString() ) * 60 * 1000;
+
+                    String minutesNeeded = editText.getText().toString();
+                    int timeNeededToWakeUp = Integer.parseInt( minutesNeeded ) * 60 * 1000;
+
                     Long alarmTime = start - timeNeededToWakeUp;
 
                     String day = "tomorrow";
