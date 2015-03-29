@@ -21,7 +21,18 @@ public class AlarmCancelReceiver extends WakefulBroadcastReceiver {
             AlarmFragment.mCalendarPendingIntent.cancel();
         }
         Utility.clearNotifications(context);
-        ToggleButton toggleButton = (ToggleButton)AlarmFragment.startAlarmButton;
-        toggleButton.setChecked(false);
+        // if cancelling a nap alarm
+        if (intent.getBooleanExtra("napTimer", false)) {
+            ToggleButton toggleButton = (ToggleButton) NapTimerFragment.startAlarmButton;
+            if (toggleButton != null) {
+                toggleButton.setChecked(false);
+            }
+        }
+        else {
+            ToggleButton toggleButton = (ToggleButton)AlarmFragment.startAlarmButton;
+            if (toggleButton != null) {
+                toggleButton.setChecked(false);
+            }
+        }
     }
 }

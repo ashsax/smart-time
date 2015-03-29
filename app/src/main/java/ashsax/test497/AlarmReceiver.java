@@ -33,6 +33,11 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         wl.acquire(10000);
 
         Intent myIntent = new Intent(context, AlarmCancelReceiver.class);
+        // if we receive an intent from the NapTimer, tell the alarmCancelReceiver too.
+        // this way in that class we can figure out which toggle button to disable
+        if (intent.getBooleanExtra("napTimer", false)) {
+            myIntent.putExtra("napTimer", true);
+        }
         Intent snoozeIntent = new Intent(context, AlarmSnoozeReceiver.class);
         PendingIntent dismissPendingIntent = PendingIntent.getBroadcast(context, 1000, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent snoozePendingIntent = PendingIntent.getBroadcast(context, 1000, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
