@@ -1,9 +1,10 @@
 package ashsax.test497;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.util.Log;
+import android.widget.ToggleButton;
 
 /**
  * Created by ash on 3/28/15.
@@ -11,7 +12,6 @@ import android.util.Log;
 public class AlarmCancelReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        /* RANDOM COMMENT */
         if (AlarmFragment.mManualPendingIntent != null) {
             MainActivity.mAlarmManager.cancel(AlarmFragment.mManualPendingIntent);
             AlarmFragment.mManualPendingIntent.cancel();
@@ -21,5 +21,8 @@ public class AlarmCancelReceiver extends WakefulBroadcastReceiver {
             AlarmFragment.mCalendarPendingIntent.cancel();
         }
         AlarmReceiver.mediaPlayer.stop();
+        Utility.clearNotifications(context);
+        ToggleButton toggleButton = (ToggleButton)AlarmFragment.startAlarmButton;
+        toggleButton.setChecked(false);
     }
 }

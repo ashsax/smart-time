@@ -2,6 +2,7 @@ package ashsax.test497;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -37,10 +38,8 @@ import java.util.Calendar;
 public class AlarmFragment extends Fragment {
 
     private TextView mClock;
-    private SeekBar mSeekBar;
-    private Button startAlarmButton;
+    public static Button startAlarmButton;
     private RelativeLayout mBox;
-    private int minuteCount;
     private CircularSeekBar mMinuteSeekBar;
     private CircularSeekBar mHourSeekBar;
     private Time mTime;
@@ -127,7 +126,6 @@ public class AlarmFragment extends Fragment {
                     mTime.minute = 0;
                     mMinuteSeekBar.setProgress(0);
                 }
-                minuteCount = mTime.getMinuteCount();
                 mClock.setText(mTime.toString());
             }
 
@@ -153,7 +151,6 @@ public class AlarmFragment extends Fragment {
                     mTime.hour = 0;
                     mHourSeekBar.setProgress(0);
                 }
-                minuteCount = mTime.getMinuteCount();
                 mClock.setText(mTime.toString());
 
                 if(i > 6 && i <= 18)
@@ -203,6 +200,7 @@ public class AlarmFragment extends Fragment {
                 else if (mManualPendingIntent != null) {
                     MainActivity.mAlarmManager.cancel(mManualPendingIntent);
                     mManualPendingIntent.cancel();
+                    Utility.clearNotifications(view.getContext());
                     AlarmReceiver.mediaPlayer.stop();
                 }
             }
