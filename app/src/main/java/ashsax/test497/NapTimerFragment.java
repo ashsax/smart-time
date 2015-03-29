@@ -178,7 +178,8 @@ public class NapTimerFragment extends Fragment {
     }
 
     public void updateZZZ(int i){
-        i = (i+5)/5;
+        if(i > 0)
+            i = (i+5)/5;
         Resources res = getResources();
         int resource = res.getIdentifier("z" + i, "drawable", getActivity().getApplicationContext().getPackageName());
         mImg.setImageResource(resource);
