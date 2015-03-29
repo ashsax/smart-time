@@ -13,7 +13,6 @@ import java.util.Calendar;
 public class AlarmSnoozeReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        AlarmReceiver.mediaPlayer.stop();
         Utility.clearNotifications(context);
 
         Calendar calendar = Calendar.getInstance();

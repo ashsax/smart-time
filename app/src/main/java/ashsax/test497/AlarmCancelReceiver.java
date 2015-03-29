@@ -20,7 +20,6 @@ public class AlarmCancelReceiver extends WakefulBroadcastReceiver {
             MainActivity.mAlarmManager.cancel(AlarmFragment.mCalendarPendingIntent);
             AlarmFragment.mCalendarPendingIntent.cancel();
         }
-        AlarmReceiver.mediaPlayer.stop();
         Utility.clearNotifications(context);
         ToggleButton toggleButton = (ToggleButton)AlarmFragment.startAlarmButton;
         toggleButton.setChecked(false);

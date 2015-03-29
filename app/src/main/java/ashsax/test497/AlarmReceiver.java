@@ -20,24 +20,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-public class AlarmReceiver extends WakefulBroadcastReceiver implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
-
-    public static MediaPlayer mediaPlayer = new MediaPlayer();
-
-    private static boolean mediaPlayerOn = false;
-
-    public AlarmReceiver() {}
-
-    @Override
-    public boolean onError(MediaPlayer mediaPlayer, int i, int i2) {
-        Log.v("Tag", "onError called");
-        return false;
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mediaPlayer) {
-        mediaPlayer.start();
-    }
+public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -56,12 +39,13 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements MediaPlay
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("Dank")
-                        .setContentText("Swag!")
+                        .setContentTitle("SmartTime")
+                        .setContentText("Alarm sounded. Time to wake up!")
                         .addAction(R.drawable.ic_action_image_timelapse, "Snooze", snoozePendingIntent)
                         .addAction(R.drawable.ic_action_alarm, "Dismiss", dismissPendingIntent)
                         .setPriority(Notification.PRIORITY_MAX)
-                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), AudioManager.STREAM_ALARM)
+                        .setDeleteIntent(dismissPendingIntent);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);
 
@@ -87,18 +71,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements MediaPlay
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        }
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-        try {
-            if (!mediaPlayerOn) {
-                mediaPlayer.setDataSource(context, alarmUri);
-            }
-            mediaPlayer.setOnPreparedListener(this);
-            mediaPlayer.prepareAsync();
-            mediaPlayerOn = true;
-        }
-        catch (IOException e) {
-            Toast.makeText(context, "IOException", Toast.LENGTH_SHORT).show();
         }
 
         // if calendarSync is on, then set the alarm for the next day as well
