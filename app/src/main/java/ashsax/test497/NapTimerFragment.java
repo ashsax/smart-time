@@ -148,7 +148,7 @@ public class NapTimerFragment extends Fragment {
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.MILLISECOND, mNapTimer.getMilliseconds());
 
-                    Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
+                    Intent myIntent = new Intent(getActivity(), NapReceiver.class);
                     myIntent.putExtra("calendarSync", false);
                     myIntent.putExtra("napTimer", true);
                     // if pendingIntent already set, cancel it first before making this new one
@@ -160,7 +160,7 @@ public class NapTimerFragment extends Fragment {
                 else if (pendingIntent != null) {
                     alarmManager.cancel(pendingIntent);
                     pendingIntent.cancel();
-                    Utility.clearNotifications(view.getContext());
+                    Utility.clearNotification(view.getContext(), Utility.NAP_NOTIFICATION_ID);
                 }
             }
         });

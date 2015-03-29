@@ -200,7 +200,7 @@ public class AlarmFragment extends Fragment {
                 else if (mManualPendingIntent != null) {
                     MainActivity.mAlarmManager.cancel(mManualPendingIntent);
                     mManualPendingIntent.cancel();
-                    Utility.clearNotifications(view.getContext());
+                    Utility.clearNotification(view.getContext(), Utility.ALARM_NOTIFICATION_ID);
                 }
             }
         });

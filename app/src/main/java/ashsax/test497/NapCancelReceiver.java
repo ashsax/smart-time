@@ -1,17 +1,16 @@
 package ashsax.test497;
 
-import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.widget.ToggleButton;
 
-/**
- * Created by ash on 3/28/15.
- */
-public class AlarmCancelReceiver extends WakefulBroadcastReceiver {
+public class NapCancelReceiver extends WakefulBroadcastReceiver {
+    public NapCancelReceiver() {
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Utility.cancelAlarm(context, "alarm");
+        Utility.cancelAlarm(context, "napTimer");
     }
 }

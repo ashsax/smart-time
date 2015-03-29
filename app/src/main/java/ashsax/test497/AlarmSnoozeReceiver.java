@@ -13,19 +13,7 @@ import java.util.Calendar;
 public class AlarmSnoozeReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Utility.clearNotifications(context);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MILLISECOND, 0);
-        // GET SNOOZE AMOUNT FROM SETTINGS
-        int snooze_amount = 1;
-        calendar.add(Calendar.MINUTE, snooze_amount);
-        Intent myIntent = new Intent(context, AlarmReceiver.class);
-        myIntent.putExtra("calendarSync", false);
-        // if pendingIntent already set, cancel it first before making this new one
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
-        Toast.makeText(context, "Snoozing for " + snooze_amount + " minutes!", Toast.LENGTH_SHORT).show();
+        Utility.clearNotification(context, Utility.ALARM_NOTIFICATION_ID);
+        Utility.snooze(context, "alarm");
     }
 }
