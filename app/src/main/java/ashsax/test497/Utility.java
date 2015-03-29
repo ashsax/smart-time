@@ -87,8 +87,7 @@ public class Utility {
     }
 
     public static void clearNotifications(Context context) {
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
-        AlarmReceiver.mediaPlayer.stop();
     }
 }

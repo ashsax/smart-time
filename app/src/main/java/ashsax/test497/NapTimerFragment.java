@@ -38,7 +38,7 @@ import java.util.Calendar;
 public class NapTimerFragment extends Fragment {
 
     private TextView mClock;
-    private Button startAlarmButton;
+    public static Button startAlarmButton;
     private RelativeLayout mBox;
     private CircularSeekBar mNapSeekBar;
     private NapTimer mNapTimer;
@@ -150,6 +150,7 @@ public class NapTimerFragment extends Fragment {
 
                     Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
                     myIntent.putExtra("calendarSync", false);
+                    myIntent.putExtra("napTimer", true);
                     // if pendingIntent already set, cancel it first before making this new one
                     pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                     alarmManager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);

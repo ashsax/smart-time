@@ -112,7 +112,6 @@ public class SettingsFragment extends Fragment {
                     if (AlarmFragment.mCalendarPendingIntent != null) {
                         MainActivity.mAlarmManager.cancel(AlarmFragment.mCalendarPendingIntent);
                         AlarmFragment.mCalendarPendingIntent.cancel();
-                        AlarmReceiver.mediaPlayer.stop();
                     }
                     Toast.makeText(getActivity(), "Alarm previously set by calendar cancelled", Toast.LENGTH_SHORT).show();
                 }
@@ -124,7 +123,6 @@ public class SettingsFragment extends Fragment {
                     if (AlarmFragment.mCalendarPendingIntent != null) {
                         MainActivity.mAlarmManager.cancel(AlarmFragment.mCalendarPendingIntent);
                         AlarmFragment.mCalendarPendingIntent.cancel();
-                        AlarmReceiver.mediaPlayer.stop();
                     }
 
                     Long start;
