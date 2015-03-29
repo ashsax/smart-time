@@ -1,10 +1,8 @@
 package ashsax.test497;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.widget.ToggleButton;
 
 /**
  * Created by ash on 3/28/15.

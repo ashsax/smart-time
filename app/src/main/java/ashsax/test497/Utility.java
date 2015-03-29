@@ -104,7 +104,6 @@ public class Utility {
     public static void clearNotification(Context context, int notificationID) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationID);
-        notificationManager.cancelAll();
     }
 
     public static void wakeupScreen(Context context) {

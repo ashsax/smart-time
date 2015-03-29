@@ -20,11 +20,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.text.Format;
 import java.util.ArrayList;
@@ -148,7 +150,7 @@ public class SettingsFragment extends Fragment {
         editText.setText("" + mTimePrefs.getInt("timeNeededToGetReady", 30));
 
         mCalendarPrefs = getActivity().getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
-        boolean calendarSync = mCalendarPrefs.getBoolean("calendarSync", false);
+        final boolean calendarSync = mCalendarPrefs.getBoolean("calendarSync", false);
         final Switch calendarSyncSwitch = (Switch) getActivity().findViewById(R.id.calendarSyncSwitch);
         calendarSyncSwitch.setChecked(calendarSync);
         calendarSyncSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -157,6 +159,7 @@ public class SettingsFragment extends Fragment {
                 SharedPreferences.Editor editor = mCalendarPrefs.edit();
                 editor.putBoolean("calendarSync", b);
                 editor.apply();
+                AlarmFragment.startAlarmButton.setEnabled(!b);
                 // if calendarSync is switched off, then cancel the calendar alarm previously set
                 if (!b) {
                     if (AlarmFragment.mCalendarPendingIntent != null) {
@@ -216,6 +219,8 @@ public class SettingsFragment extends Fragment {
 //                    Toast.makeText(SettingsActivity.this, "Alarm set for " + df.format(alarmTime) + " at " + tf.format(alarmTime), Toast.LENGTH_SHORT).show();
 
 //                    Toast.makeText(SettingsActivity.this, title + " on " + df.format(start) + " at " + tf.format(start), Toast.LENGTH_SHORT).show();
+                    ToggleButton toggleButton = (ToggleButton) AlarmFragment.startAlarmButton;
+                    toggleButton.setChecked(false);
                 }
             }
         });

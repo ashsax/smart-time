@@ -202,8 +202,6 @@ public class NapTimerFragment extends Fragment {
         if (mSharedPrefs == null) {
             mSharedPrefs = getActivity().getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
         }
-        boolean calendarSync = mSharedPrefs.getBoolean("calendarSync", false);
-        startAlarmButton.setEnabled(!calendarSync);
 
         updateTimerDisplay(mNapSeekBar.getProgress());
     }
