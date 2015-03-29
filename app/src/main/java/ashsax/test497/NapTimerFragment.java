@@ -47,7 +47,7 @@ public class NapTimerFragment extends Fragment {
     final float[] hsvColor = {240, 0.68f, 0.2f};
     private SharedPreferences mSharedPrefs;
 
-    private final static int maxNap = 24;
+    private final static int maxNap = 120;
 
     private ImageView mImg;
 
@@ -114,25 +114,17 @@ public class NapTimerFragment extends Fragment {
         mImg = (ImageView) getActivity().findViewById(R.id.zzz);
         updateZZZ(0);
 
-        Calendar cal = Calendar.getInstance();
-        updateColor(cal.get(Calendar.HOUR_OF_DAY));
-        mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
+        setBackgroundColor();
 
         mNapSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
-                Calendar cal = Calendar.getInstance();
-                updateColor(cal.get(Calendar.HOUR_OF_DAY));
-                mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
-
-                updateZZZ(progress);
-
-                mNapTimer.minutes = progress * 5;
                 if (progress == maxNap) {
                     mNapSeekBar.setProgress(0);
-                    mImg.setImageResource(R.drawable.z0);
+                    progress = 0;
                 }
-                mClock.setText(mNapTimer.toString());
+
+                updateTimerDisplay(progress);
             }
 
             @Override
@@ -162,7 +154,7 @@ public class NapTimerFragment extends Fragment {
                     pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                     alarmManager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
                     alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
-                    Toast.makeText(getActivity(), "Alarm set for " + mNapTimer.getMinuteCount() + " minutes from now", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "We'll wake you up in " + mNapTimer.toastMsg(), Toast.LENGTH_SHORT).show();
                 }
                 else if (pendingIntent != null) {
                     alarmManager.cancel(pendingIntent);
@@ -174,15 +166,29 @@ public class NapTimerFragment extends Fragment {
     }
 
     public void updateColor(int i) {
-        float hue = (float) Math.cos((2 * Math.PI * (float) i / maxNap));
+        float hue = (float) Math.cos((2 * Math.PI * (float) i / 24));
         hsvColor[0] = 220 + 20f * hue;
         hsvColor[2] = ((1 - hue)*0.35f) + 0.2f;
     }
 
+    private void setBackgroundColor(){
+        Calendar cal = Calendar.getInstance();
+        updateColor(cal.get(Calendar.HOUR_OF_DAY));
+        mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
+    }
+
     public void updateZZZ(int i){
+        i = (i+5)/5;
         Resources res = getResources();
         int resource = res.getIdentifier("z" + i, "drawable", getActivity().getApplicationContext().getPackageName());
         mImg.setImageResource(resource);
+    }
+
+    private void updateTimerDisplay(int progress){
+        setBackgroundColor();
+        updateZZZ(progress);
+        mNapTimer.minutes = progress;
+        mClock.setText(mNapTimer.toString());
     }
 
     @Override
@@ -196,6 +202,8 @@ public class NapTimerFragment extends Fragment {
         }
         boolean calendarSync = mSharedPrefs.getBoolean("calendarSync", false);
         startAlarmButton.setEnabled(!calendarSync);
+
+        updateTimerDisplay(mNapSeekBar.getProgress());
     }
 
 

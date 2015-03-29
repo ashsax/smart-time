@@ -23,10 +23,10 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="1dip"
+            android:layout_height="2dip"
             android:background="#90005fbf"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginLeft="7dp"
             android:layout_alignParentBottom="true"
             />
 
@@ -36,7 +36,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:textColor="#CCCCCC"
+        android:textColor="#606060"
         android:text="Calendar Sync"
         android:id="@+id/calendarSyncSwitch"
         android:layout_centerHorizontal="true"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:text="Time to get ready:"
             android:textSize="18dp"
-            android:textColor="#CCCCCC"
+            android:textColor="#606060"
             android:layout_alignParentLeft="true"
             android:paddingTop="10dp"
             android:paddingLeft="20dp" />
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:text="minutes"
             android:textSize="18dp"
-            android:textColor="#CCCCCC"
+            android:textColor="#606060"
             android:layout_alignParentLeft="true"
             android:paddingTop="10dp"
             android:paddingLeft="10dp" />
@@ -89,7 +89,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:id="@+id/snoozeSetting"
         android:layout_below="@+id/getReadyTime">
 
@@ -104,11 +104,11 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="1dip"
+            android:layout_height="2dip"
             android:background="#90005fbf"
             android:id="@+id/line1"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginLeft="7dp"
             android:layout_alignParentBottom="true"
             />
 
@@ -126,6 +126,7 @@
             android:layout_height="wrap_content"
             android:text="Snooze length:"
             android:textSize="18sp"
+            android:textColor="#606060"
             android:layout_alignParentLeft="true"
             android:paddingTop="0dp"
             android:paddingLeft="20dp"/>
@@ -150,6 +151,7 @@
             android:layout_height="wrap_content"
             android:text="minutes"
             android:textSize="18sp"
+            android:textColor="#606060"
             android:layout_alignParentLeft="true"
             android:paddingTop="0dp"
             android:paddingLeft="10dp" />

@@ -15,14 +15,29 @@ public class NapTimer {
         minutes = minutes_;
     }
 
-    public String toString(){
-        String hourStr = String.valueOf(minutes/60);
-        String minuteStr = String.valueOf(minutes%60);
+    private String getHrStr(){
+        return String.valueOf(minutes/60);
+    }
+    private String getMinStr(){
+        return String.valueOf(minutes%60);
+    }
 
+    public String toString(){
+        String minuteStr = getMinStr();
         if(minutes%60 < 10)
             minuteStr = "0"+minuteStr;
 
-        return hourStr+"h "+minuteStr+"m";
+        return getHrStr()+"h "+minuteStr+"m";
+    }
+
+    public String toastMsg(){
+        String minStr = getMinStr() + " minutes";
+        if(minutes < 60)
+            return minStr;
+        else if(minutes == 60)
+            return getHrStr() + " hour";
+
+        return getHrStr() + " hour and " + minStr;
     }
 
     public int getMinuteCount() {
