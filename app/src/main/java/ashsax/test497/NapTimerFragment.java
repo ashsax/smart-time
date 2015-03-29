@@ -174,7 +174,8 @@ public class NapTimerFragment extends Fragment {
 
     private void setBackgroundColor(){
         Calendar cal = Calendar.getInstance();
-        updateColor(cal.get(Calendar.HOUR_OF_DAY));
+        int hrIndex = (cal.get(Calendar.HOUR_OF_DAY)/2) + 6;
+        updateColor(hrIndex);
         mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
     }
 

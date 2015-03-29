@@ -102,24 +102,6 @@ public class MainActivity extends ActionBarActivity implements TabListener {
     public void onTabReselected(android.support.v7.app.ActionBar.Tab tab, android.support.v4.app.FragmentTransaction fragmentTransaction) {
 
     }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.settings:
-                Intent intentToStartSettings = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intentToStartSettings);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
 
     public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
