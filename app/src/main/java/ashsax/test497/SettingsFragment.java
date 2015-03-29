@@ -6,10 +6,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +22,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import java.text.Format;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -47,6 +54,10 @@ public class SettingsFragment extends Fragment {
 
     private SharedPreferences mCalendarPrefs;
     private SharedPreferences mTimePrefs;
+    private SharedPreferences mSnoozePrefs;
+    private SharedPreferences mAlarmTypePrefs;
+
+    private String[] alarmSpinner;
 
     /**
      * Use this factory method to create a new instance of
@@ -90,8 +101,47 @@ public class SettingsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.wakeup_times, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.wakeup_times, android.R.layout.simple_spinner_item);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        alarmSpinner = new String[] {
+                "1", "2", "3", "4", "5"
+        };
+
+        Spinner alarmSpinner = (Spinner) getActivity().findViewById(R.id.alarmTypeSpinner);
+        List<CharSequence> planets = new ArrayList<CharSequence>();
+        ArrayAdapter<CharSequence> adapter= new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_item, planets);
+
+        // GET RINGTONES AND ADD TO LIST
+        RingtoneManager ringtoneManager = new RingtoneManager(getActivity());
+//        ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
+//        Cursor ringtones = ringtoneManager.getCursor();
+//        String[] cols = ringtones.getColumnNames();
+//        Toast.makeText(getActivity(), "" + ringtones.getCount() , Toast.LENGTH_SHORT).show();
+
+        adapter.add("Alarm1");
+        adapter.add("Alarm2");
+        adapter.notifyDataSetChanged();
+        alarmSpinner.setAdapter(adapter);
+
+
+        mSnoozePrefs = getActivity().getSharedPreferences("snoozePrefs", Context.MODE_PRIVATE);
+        final EditText snoozeText = (EditText) getActivity().findViewById(R.id.snoozeLength);
+        snoozeText.setText("" + mSnoozePrefs.getInt("snoozeTime", 5));
+        snoozeText.addTextChangedListener(new TextWatcher(){
+            public void afterTextChanged(Editable s) {
+                String snooze = snoozeText.getText().toString();
+                if(snooze.trim().length() == 0) {
+                    snooze = "5";
+                }
+
+                SharedPreferences.Editor editor = mSnoozePrefs.edit();
+                editor.putInt("snoozeTime", Integer.parseInt(snooze));
+                editor.apply();
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
+        });
 
         mTimePrefs = getActivity().getSharedPreferences("timePrefs", Context.MODE_PRIVATE);
         final EditText editText = (EditText) getActivity().findViewById(R.id.editText);
@@ -169,6 +219,12 @@ public class SettingsFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public static int getSnoozeTime(Context context){
+        return context.
+                getSharedPreferences("snoozePrefs", Context.MODE_PRIVATE).
+                getInt("snoozeTime", 5);
     }
 
     /**

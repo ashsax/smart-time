@@ -67,6 +67,7 @@
             android:ems="3"
             android:id="@+id/editText"
             android:text="30"
+            android:imeOptions="actionDone"
             android:gravity="center_horizontal"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
@@ -90,13 +91,13 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="25dp"
-        android:id="@+id/snoozeSetting"
+        android:id="@+id/alarmSettingHeader"
         android:layout_below="@+id/getReadyTime">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Snooze Settings"
+            android:text="Alarm Settings"
             android:textSize="23sp"
             android:layout_alignParentLeft="true"
             android:paddingTop="0dp"
@@ -114,12 +115,40 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/alarmType"
+        android:layout_below="@+id/alarmSettingHeader">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alarm Type:"
+            android:textSize="18sp"
+            android:textColor="#606060"
+            android:layout_alignParentLeft="true"
+            android:paddingTop="0dp"
+            android:paddingLeft="20dp"/>
+
+        <Spinner
+            android:id="@+id/alarmTypeSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentRight="true"
+        />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/snoozeSetting">
+        android:id="@+id/snooze"
+        android:layout_below="@+id/alarmType">
 
         <TextView
             android:layout_width="wrap_content"
@@ -139,6 +168,7 @@
             android:id="@+id/snoozeLength"
             android:text="5"
             android:textSize="18sp"
+            android:imeOptions="actionDone"
             android:gravity="center_horizontal"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
@@ -157,6 +187,5 @@
             android:paddingLeft="10dp" />
 
     </LinearLayout>
-
 
 </RelativeLayout>
