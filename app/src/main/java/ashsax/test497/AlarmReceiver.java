@@ -41,12 +41,15 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements MediaPlay
     public void onReceive(Context context, Intent intent) {
 
         Intent myIntent = new Intent(context, AlarmCancelReceiver.class);
+        Intent snoozeIntent = new Intent(context, AlarmSnoozeReceiver.class);
         PendingIntent dismissPendingIntent = PendingIntent.getBroadcast(context, 1000, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent snoozePendingIntent = PendingIntent.getBroadcast(context, 1000, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle("Dank")
                         .setContentText("Swag!")
+                        .addAction(R.drawable.ic_action_image_timelapse, "Snooze", snoozePendingIntent)
                         .addAction(R.drawable.ic_action_alarm, "Dismiss", dismissPendingIntent);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);
