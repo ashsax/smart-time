@@ -1,6 +1,7 @@
 package ashsax.test497;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.WakefulBroadcastReceiver;
@@ -39,6 +41,13 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements MediaPlay
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        PowerManager pm = (PowerManager)context.getSystemService(
+                Context.POWER_SERVICE);
+        PowerManager.WakeLock wl = pm.newWakeLock(
+                PowerManager.SCREEN_DIM_WAKE_LOCK
+                        | PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                "AlarmReceiver");
+        wl.acquire(10000);
 
         Intent myIntent = new Intent(context, AlarmCancelReceiver.class);
         Intent snoozeIntent = new Intent(context, AlarmSnoozeReceiver.class);
@@ -50,7 +59,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements MediaPlay
                         .setContentTitle("Dank")
                         .setContentText("Swag!")
                         .addAction(R.drawable.ic_action_image_timelapse, "Snooze", snoozePendingIntent)
-                        .addAction(R.drawable.ic_action_alarm, "Dismiss", dismissPendingIntent);
+                        .addAction(R.drawable.ic_action_alarm, "Dismiss", dismissPendingIntent)
+                        .setPriority(Notification.PRIORITY_MAX)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);
 
@@ -73,7 +84,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements MediaPlay
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
         mNotificationManager.notify(0, mBuilder.build());
-
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
