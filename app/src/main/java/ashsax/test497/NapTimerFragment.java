@@ -166,6 +166,7 @@ public class NapTimerFragment extends Fragment {
                 else if (pendingIntent != null) {
                     alarmManager.cancel(pendingIntent);
                     pendingIntent.cancel();
+                    Utility.clearNotifications(view.getContext());
                 }
             }
         });

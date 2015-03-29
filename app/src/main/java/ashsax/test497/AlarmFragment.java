@@ -201,7 +201,6 @@ public class AlarmFragment extends Fragment {
                     MainActivity.mAlarmManager.cancel(mManualPendingIntent);
                     mManualPendingIntent.cancel();
                     Utility.clearNotifications(view.getContext());
-                    AlarmReceiver.mediaPlayer.stop();
                 }
             }
         });
