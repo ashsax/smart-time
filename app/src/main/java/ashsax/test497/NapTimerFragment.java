@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
@@ -179,38 +180,9 @@ public class NapTimerFragment extends Fragment {
     }
 
     public void updateZZZ(int i){
-        if(i > 24 || i < 0)
-            return;
-
-        final int resImages[] = {
-                R.drawable.z0,
-                R.drawable.z1,
-                R.drawable.z2,
-                R.drawable.z3,
-                R.drawable.z4,
-                R.drawable.z5,
-                R.drawable.z6,
-                R.drawable.z7,
-                R.drawable.z8,
-                R.drawable.z9,
-                R.drawable.z10,
-                R.drawable.z11,
-                R.drawable.z12,
-                R.drawable.z13,
-                R.drawable.z14,
-                R.drawable.z15,
-                R.drawable.z16,
-                R.drawable.z17,
-                R.drawable.z18,
-                R.drawable.z19,
-                R.drawable.z20,
-                R.drawable.z21,
-                R.drawable.z22,
-                R.drawable.z23,
-                R.drawable.z24  };
-
-        mImg.setImageResource(resImages[i]);
-
+        Resources res = getResources();
+        int resource = res.getIdentifier("z" + i, "drawable", getActivity().getApplicationContext().getPackageName());
+        mImg.setImageResource(resource);
     }
 
     @Override
