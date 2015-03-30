@@ -40,6 +40,10 @@ public class MainActivity extends ActionBarActivity implements TabListener {
         actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#ff005fbf")));
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+        actionBar.setLogo(R.drawable.ic_actionbar);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
         mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
