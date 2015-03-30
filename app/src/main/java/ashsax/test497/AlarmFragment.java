@@ -196,6 +196,10 @@ public class AlarmFragment extends Fragment {
                     mManualPendingIntent = PendingIntent.getBroadcast(MainActivity.mAlarmContext, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     MainActivity.mAlarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), mManualPendingIntent);
                     Toast.makeText(getActivity(), "Alarm set for " + mTime + " for " + day, Toast.LENGTH_SHORT).show();
+                    mSharedPrefs = getActivity().getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = mSharedPrefs.edit();
+                    editor.putLong("Alarm", calendar.getTimeInMillis());
+                    editor.apply();
                 }
                 else if (mManualPendingIntent != null) {
                     MainActivity.mAlarmManager.cancel(mManualPendingIntent);
