@@ -151,6 +151,7 @@ public class SettingsFragment extends Fragment {
 
         mCalendarPrefs = getActivity().getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
         final boolean calendarSync = mCalendarPrefs.getBoolean("calendarSync", false);
+        editText.setEnabled(!calendarSync);
         final Switch calendarSyncSwitch = (Switch) getActivity().findViewById(R.id.calendarSyncSwitch);
         calendarSyncSwitch.setChecked(calendarSync);
         calendarSyncSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -160,6 +161,7 @@ public class SettingsFragment extends Fragment {
                 editor.putBoolean("calendarSync", b);
                 editor.apply();
                 AlarmFragment.startAlarmButton.setEnabled(!b);
+                editText.setEnabled(!b);
                 // if calendarSync is switched off, then cancel the calendar alarm previously set
                 if (!b) {
                     if (AlarmFragment.mCalendarPendingIntent != null) {
@@ -170,55 +172,24 @@ public class SettingsFragment extends Fragment {
                 }
                 else {
                     // cancel previous calendar alarm
-                    Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
-                    myIntent.putExtra("calendarSync", true);
-                    AlarmFragment.mCalendarPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     if (AlarmFragment.mCalendarPendingIntent != null) {
                         MainActivity.mAlarmManager.cancel(AlarmFragment.mCalendarPendingIntent);
                         AlarmFragment.mCalendarPendingIntent.cancel();
                     }
-
-                    Long start;
-                    try {
-                        start = Utility.getAlarmTime(getActivity());
-                    }
-                    catch (Exception e) {
-                        return;
-                    }
-
-                    myIntent = new Intent(getActivity(), AlarmReceiver.class);
-                    myIntent.putExtra("calendarSync", true);
-                    // if pendingIntent already set, cancel it first before making this new one
-                    AlarmFragment.mCalendarPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                    // time needed to wake up in milliseconds
+                    
                     editor = mTimePrefs.edit();
                     String minutesNeeded = editText.getText().toString();
-                    Log.v("SettingsFragment", minutesNeeded);
                     editor.putInt("timeNeededToGetReady", Integer.parseInt(minutesNeeded));
                     editor.apply();
-                    int timeNeededToWakeUp = Integer.parseInt( editText.getText().toString() ) * 60 * 1000;
-                    Long alarmTime = start - timeNeededToWakeUp;
-
-                    String day = "tomorrow";
-                    long startOfTomorrow = Utility.getStartOfTomorrow().getTimeInMillis();
-                    if(alarmTime < startOfTomorrow)
-                        day = "today";
-
-                    if(alarmTime <= Calendar.getInstance().getTimeInMillis()){
-                        Toast.makeText(getActivity(), "Cannot set alarm for the past", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    MainActivity.mAlarmManager.set(AlarmManager.RTC, alarmTime, AlarmFragment.mCalendarPendingIntent);
-
-                    Format df = DateFormat.getDateFormat(getActivity());
-                    Format tf = DateFormat.getTimeFormat(getActivity());
-
-                    Toast.makeText(getActivity(), "Alarm set for " + tf.format(alarmTime) + " for " + day, Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(SettingsActivity.this, "Alarm set for "+ (alarmTime - Calendar.getInstance().getTimeInMillis()), Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(SettingsActivity.this, "Alarm set for " + df.format(alarmTime) + " at " + tf.format(alarmTime), Toast.LENGTH_SHORT).show();
-
-//                    Toast.makeText(SettingsActivity.this, title + " on " + df.format(start) + " at " + tf.format(start), Toast.LENGTH_SHORT).show();
+                    
+                    Intent calendarIntent = new Intent(getActivity(), CalendarReceiver.class);
+                    PendingIntent calendarPendingIntent = PendingIntent.getBroadcast(MainActivity.mAlarmContext, 0, calendarIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    MainActivity.mAlarmManager.set(AlarmManager.RTC, Calendar.getInstance().getTimeInMillis(), calendarPendingIntent);
+                    
+                    Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
+                    // if pendingIntent already set, cancel it first before making this new one
+                    AlarmFragment.mCalendarPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    
                     ToggleButton toggleButton = (ToggleButton) AlarmFragment.startAlarmButton;
                     toggleButton.setChecked(false);
                 }

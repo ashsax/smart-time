@@ -191,7 +191,6 @@ public class AlarmFragment extends Fragment {
                     calendar.set(Calendar.SECOND, 0);
                     calendar.set(Calendar.MILLISECOND, mTime.getMilliseconds());
                     Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
-                    myIntent.putExtra("calendarSync", false);
                     // if pendingIntent already set, cancel it first before making this new one
                     mManualPendingIntent = PendingIntent.getBroadcast(MainActivity.mAlarmContext, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     MainActivity.mAlarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), mManualPendingIntent);

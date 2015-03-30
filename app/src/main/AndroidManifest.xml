@@ -76,7 +76,7 @@
             android:exported="true" >
         </receiver>
         <receiver
-            android:name=".ReminderReceiver"
+            android:name=".CalendarReceiver"
             android:enabled="true"
             android:exported="true" >
         </receiver>
