@@ -8,7 +8,9 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.PowerManager;
@@ -27,7 +29,6 @@ import java.util.Calendar;
  * Created by ash on 3/9/15.
  */
 public class Utility {
-
     public static final int ALARM_NOTIFICATION_ID = 0;
     public static final int NAP_NOTIFICATION_ID = 1;
     public static final int REMINDER_NOTIFICATION_ID = 2;
@@ -119,7 +120,7 @@ public class Utility {
     public static void createNotification(Context context, String notificationType) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle("SmartTime");
         PendingIntent dismissPendingIntent = PendingIntent.getBroadcast(context, 1000, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent snoozePendingIntent;
@@ -131,8 +132,9 @@ public class Utility {
             Intent snoozeIntent = new Intent(context, AlarmSnoozeReceiver.class);
             dismissPendingIntent = PendingIntent.getBroadcast(context, 1000, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             snoozePendingIntent = PendingIntent.getBroadcast(context, 1000, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            mBuilder.addAction(R.drawable.ic_action_image_timelapse, "Snooze", snoozePendingIntent)
-                    .setDeleteIntent(dismissPendingIntent);
+            mBuilder.addAction(R.drawable.ic_stat_av_snooze, "Snooze", snoozePendingIntent)
+                    .setDeleteIntent(dismissPendingIntent)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), AudioAttributes.USAGE_ALARM);
         }
         else if (notificationType == "napTimer") {
             notificationID = NAP_NOTIFICATION_ID;
@@ -141,8 +143,9 @@ public class Utility {
             Intent snoozeIntent = new Intent(context, NapSnoozeReceiver.class);
             dismissPendingIntent = PendingIntent.getBroadcast(context, 1000, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             snoozePendingIntent = PendingIntent.getBroadcast(context, 1000, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            mBuilder.addAction(R.drawable.ic_action_image_timelapse, "Snooze", snoozePendingIntent)
-                    .setDeleteIntent(dismissPendingIntent);
+            mBuilder.addAction(R.drawable.ic_stat_av_snooze, "Snooze", snoozePendingIntent)
+                    .setDeleteIntent(dismissPendingIntent)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), AudioAttributes.USAGE_ALARM);
         }
         else if (notificationType == "reminder") {
             notificationID = REMINDER_NOTIFICATION_ID;
@@ -151,8 +154,7 @@ public class Utility {
             dismissPendingIntent = PendingIntent.getBroadcast(context, 1000, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
         mBuilder.setPriority(Notification.PRIORITY_MAX)
-                .addAction(R.drawable.ic_action_alarm, "Dismiss", dismissPendingIntent)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), AudioManager.STREAM_ALARM);
+                .addAction(R.drawable.ic_stat_action_alarm_off, "Dismiss", dismissPendingIntent);
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);
