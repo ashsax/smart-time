@@ -184,7 +184,7 @@ public class Utility {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MILLISECOND, 0);
         // GET SNOOZE AMOUNT FROM SETTINGS
-        int snooze_amount = 1;
+        int snooze_amount = SettingsFragment.getSnoozeTime(context);
         calendar.add(Calendar.MINUTE, snooze_amount);
         Intent myIntent = new Intent();
         if (snoozeType == "alarm") {
