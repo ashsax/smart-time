@@ -52,6 +52,11 @@ public class AlarmFragment extends Fragment {
     private final static int maxMinutes = 60;
 
     private ImageView mImg;
+    private ImageView mMinuteHand;
+    final float minRotation = -117.29f;
+
+    private ImageView mHourHand;
+    final float hourRotation = -127.32f;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -118,6 +123,12 @@ public class AlarmFragment extends Fragment {
         mImg = (ImageView) getActivity().findViewById(R.id.sunmoon);
         updateAlpha(0);
 
+        mMinuteHand = (ImageView) getActivity().findViewById(R.id.minuteHand);
+        mMinuteHand.setRotation(minRotation);
+
+        mHourHand = (ImageView) getActivity().findViewById(R.id.hourHand);
+        mHourHand.setRotation(hourRotation);
+
         mMinuteSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
@@ -127,6 +138,7 @@ public class AlarmFragment extends Fragment {
                     mMinuteSeekBar.setProgress(0);
                 }
                 mClock.setText(mTime.toString());
+                mMinuteHand.setRotation(minRotation + progress*6);
             }
 
             @Override
@@ -159,6 +171,7 @@ public class AlarmFragment extends Fragment {
                     mImg.setImageResource(R.drawable.moon);
 
                 updateAlpha(i);
+                mHourHand.setRotation(hourRotation + i*15);
             }
 
             @Override
