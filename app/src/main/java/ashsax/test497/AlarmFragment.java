@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,6 +47,7 @@ public class AlarmFragment extends Fragment {
     public static PendingIntent mCalendarPendingIntent;
     public static PendingIntent mManualPendingIntent;
     final float[] hsvColor = {240, 0.68f, 0.2f};
+    final int[] tcbColor = new int[] { 0xff3B5998, 0xff3B5998, 0xffffffff };
     private SharedPreferences mSharedPrefs;
 
     private final static int maxHours = 24;
@@ -151,12 +153,13 @@ public class AlarmFragment extends Fragment {
 
             }
         });
-        mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
+
+//        mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
+        updateColor(0);
+        mBox.setBackgroundDrawable( new DrawableGradient(tcbColor, 0).SetTransparency(10));
         mHourSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int i, boolean fromUser) {
-                updateColor(i);
-                mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
 
                 mTime.hour = i;
                 if (i == maxHours) {
@@ -172,6 +175,9 @@ public class AlarmFragment extends Fragment {
 
                 updateAlpha(i);
                 mHourHand.setRotation(hourRotation + i*15);
+
+                updateColor(mTime.hour);
+                mBox.setBackgroundDrawable( new DrawableGradient(tcbColor, 0).SetTransparency(10));
             }
 
             @Override
@@ -194,6 +200,9 @@ public class AlarmFragment extends Fragment {
 
                 // set alarm based on user inputted time
                 if (on) {
+                    startAlarmButton.setTextColor(Color.RED);
+                    startAlarmButton.setText("Disable Alarm at \n" + mTime.toString());
+
                     Calendar calendar = Calendar.getInstance();
                     if (mTime.getMinuteCount() < calendar.get(Calendar.MINUTE) + 60 * calendar.get(Calendar.HOUR_OF_DAY)) {
                         calendar.add(Calendar.DAY_OF_YEAR, 1);
@@ -214,6 +223,8 @@ public class AlarmFragment extends Fragment {
                     editor.apply();
                 }
                 else if (mManualPendingIntent != null) {
+                    startAlarmButton.setTextColor(Color.WHITE);
+
                     MainActivity.mAlarmManager.cancel(mManualPendingIntent);
                     mManualPendingIntent.cancel();
                     Utility.clearNotification(view.getContext(), Utility.ALARM_NOTIFICATION_ID);
@@ -223,6 +234,25 @@ public class AlarmFragment extends Fragment {
     }
 
     public void updateColor(int i) {
+        if(i == 12 || i == 0){
+            updateHSV(i);
+            tcbColor[0] = tcbColor[1] = tcbColor[2] = Color.HSVToColor(hsvColor);
+            return;
+        }
+
+        updateHSV(i);
+        tcbColor[0] = Color.HSVToColor(hsvColor);
+
+        int centerColor = (i > 12) ? -1 : 1;
+        updateHSV(i+centerColor);
+        tcbColor[1] = Color.HSVToColor(hsvColor);
+
+        int bottomColor = (i > 12) ? -3 : 3;
+        updateHSV(i+bottomColor);
+        tcbColor[2] = Color.HSVToColor(hsvColor);
+    }
+
+    public void updateHSV(int i){
         float hue = (float) Math.cos((2 * Math.PI * (float) i / maxHours));
         hsvColor[0] = 220 + 20f * hue;
         hsvColor[2] = ((1 - hue)*0.35f) + 0.2f;
@@ -244,6 +274,10 @@ public class AlarmFragment extends Fragment {
         }
         boolean calendarSync = mSharedPrefs.getBoolean("calendarSync", false);
         startAlarmButton.setEnabled(!calendarSync);
+
+        updateColor(mHourSeekBar.getProgress());
+        mHourHand.setRotation(hourRotation + mHourSeekBar.getProgress()*15);
+        mMinuteHand.setRotation(minRotation + mMinuteSeekBar.getProgress()*15);
     }
 
 
@@ -262,4 +296,24 @@ public class AlarmFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
+
+    public class DrawableGradient extends GradientDrawable {
+        DrawableGradient(int[] colors, int cornerRadius) {
+            super(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+
+            try {
+                this.setShape(GradientDrawable.RECTANGLE);
+                this.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+                this.setCornerRadius(cornerRadius);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public DrawableGradient SetTransparency(int transparencyPercent) {
+            this.setAlpha(255 - ((255 * transparencyPercent) / 100));
+
+            return this;
+        }
+    }
 }

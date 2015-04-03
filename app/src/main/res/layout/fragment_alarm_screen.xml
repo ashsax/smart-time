@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:id="@+id/relativeLayout"
+    android:background="@drawable/gradient"
 
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -17,6 +18,7 @@
         android:layout_height="wrap_content"
         android:text="12:00 AM"
         android:textSize="64sp"
+        android:typeface="sans"
         android:id="@+id/clock"
         android:textColor="#ffffff"
         android:layout_alignParentTop="true"
@@ -51,7 +53,7 @@
             app1:circle_color="#00CCCCCC"
             app1:circle_progress_color="#003B35DE"
             app1:pointer_color="#00000000"
-            app1:pointer_halo_color="#303B35DE"/>
+            app1:pointer_halo_color="#203B35DE"/>
 
         <ashsax.test497.CircularSeekBar
             android:id="@+id/hourSeekBar"
@@ -64,7 +66,7 @@
             app1:circle_color="#00CCCCCC"
             app1:circle_progress_color="#003B35DE"
             app1:pointer_color="#00000000"
-            app1:pointer_halo_color="#303B35DE"/>
+            app1:pointer_halo_color="#203B35DE"/>
 
         <ImageView
             android:id="@+id/sunmoon"
@@ -81,7 +83,6 @@
             android:src="@drawable/minutehand_grey"
             android:id="@+id/minuteHand"
             android:layout_centerInParent="true"
-            android:alpha="0.8"
             />
 
         <ImageView
@@ -95,14 +96,17 @@
     </RelativeLayout>
 
     <ToggleButton
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:text="New ToggleButton"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
         android:textOff="Set Alarm"
         android:textOn="Disable Alarm"
         android:id="@+id/startAlarmButton"
         android:layout_below="@+id/circleLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button"/>
 
 </RelativeLayout>
