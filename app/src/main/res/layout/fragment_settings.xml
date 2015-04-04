@@ -5,7 +5,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="ashsax.test497.SettingsActivity"
-    android:background="#ffffff">
+    android:background="@drawable/gradient">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,18 +18,11 @@
             android:layout_height="wrap_content"
             android:text="Sync Settings"
             android:textSize="23sp"
+            android:textColor="#ffffff"
             android:layout_alignParentLeft="true"
-            android:paddingTop="0dp"
-            android:textColor="#000000" />
+            android:paddingTop="0dp"/>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:background="#90005fbf"
-            android:layout_marginTop="17dp"
-            android:layout_marginLeft="7dp"
-            android:layout_alignParentBottom="true"
-            />
+        <include layout="@layout/bar" />
 
     </LinearLayout>
 
@@ -37,7 +30,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:textColor="#606060"
+        android:textColor="#dddddd"
         android:text="Calendar Sync"
         android:id="@+id/calendarSyncSwitch"
         android:layout_centerHorizontal="true"
@@ -54,12 +47,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time to get ready:"
+            android:text="Time to get ready before first event:"
             android:textSize="18dp"
-            android:textColor="#606060"
+            android:textColor="#dddddd"
             android:layout_alignParentLeft="true"
             android:paddingTop="10dp"
             android:paddingLeft="20dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/getReadyTime2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/getReadyTime"
+        android:paddingLeft="113dp">
 
         <EditText
             android:layout_width="wrap_content"
@@ -68,6 +69,7 @@
             android:ems="3"
             android:id="@+id/editText"
             android:text="30"
+            android:textColor="#eeeeee"
             android:imeOptions="actionDone"
             android:gravity="center_horizontal"
             android:layout_alignParentBottom="true"
@@ -81,17 +83,18 @@
             android:layout_height="wrap_content"
             android:text="minutes"
             android:textSize="18dp"
-            android:textColor="#606060"
+            android:textColor="#dddddd"
             android:layout_alignParentLeft="true"
             android:paddingTop="10dp"
             android:paddingLeft="10dp" />
 
     </LinearLayout>
 
+    <!--Alarm settings-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="55dp"
         android:id="@+id/alarmSettingHeader"
         android:layout_below="@+id/getReadyTime">
 
@@ -100,22 +103,15 @@
             android:layout_height="wrap_content"
             android:text="Alarm Settings"
             android:textSize="23sp"
+            android:textColor="#ffffff"
             android:layout_alignParentLeft="true"
-            android:paddingTop="0dp"
-            android:textColor="#000000" />
+            android:paddingTop="0dp" />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:background="#90005fbf"
-            android:id="@+id/line1"
-            android:layout_marginTop="17dp"
-            android:layout_marginLeft="7dp"
-            android:layout_alignParentBottom="true"
-            />
+        <include layout="@layout/bar"/>
 
     </LinearLayout>
 
+    <!--Alarm type-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -128,7 +124,7 @@
             android:layout_height="wrap_content"
             android:text="Alarm Type:"
             android:textSize="18sp"
-            android:textColor="#606060"
+            android:textColor="#dddddd"
             android:layout_alignParentLeft="true"
             android:paddingTop="0dp"
             android:paddingLeft="20dp"/>
@@ -144,10 +140,11 @@
 
     </LinearLayout>
 
+    <!--Snooze-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:id="@+id/snooze"
         android:layout_below="@+id/alarmType">
 
@@ -156,7 +153,7 @@
             android:layout_height="wrap_content"
             android:text="Snooze for:"
             android:textSize="18sp"
-            android:textColor="#606060"
+            android:textColor="#dddddd"
             android:layout_alignParentLeft="true"
             android:paddingTop="0dp"
             android:paddingLeft="20dp"/>
@@ -168,6 +165,7 @@
             android:ems="3"
             android:id="@+id/snoozeLength"
             android:text="5"
+            android:textColor="#eeeeee"
             android:textSize="18sp"
             android:imeOptions="actionDone"
             android:gravity="center_horizontal"
@@ -182,7 +180,7 @@
             android:layout_height="wrap_content"
             android:text="minutes"
             android:textSize="18sp"
-            android:textColor="#606060"
+            android:textColor="#dddddd"
             android:layout_alignParentLeft="true"
             android:paddingTop="0dp"
             android:paddingLeft="10dp" />

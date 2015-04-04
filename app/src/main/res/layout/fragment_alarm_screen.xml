@@ -34,14 +34,7 @@
         android:id="@+id/circleLayout"
         android:layout_marginTop="0dp">
 
-        <ImageView
-            android:layout_width="275dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/clock3"
-            android:layout_centerInParent="true"
-            android:alpha="0.8"
-            android:rotation="1.58"
-            />
+        <include layout="@layout/ticks"/>
 
         <ashsax.test497.CircularSeekBar
             android:id="@+id/minuteSeekBar"
@@ -59,7 +52,6 @@
             android:id="@+id/hourSeekBar"
             android:layout_width="190dp"
             android:layout_height="wrap_content"
-            app1:end_angle="270"
             app1:lock_enabled="false"
             android:layout_centerInParent="true"
             app1:move_outside_circle="true"
@@ -77,36 +69,28 @@
             android:alpha="0.8"
             />
 
-        <ImageView
+        <include layout="@layout/minute_hand"
             android:layout_width="275dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/minutehand_grey"
-            android:id="@+id/minuteHand"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            />
+            android:id="@+id/minuteHand"/>
 
         <ImageView
             android:layout_width="275dp"
             android:layout_height="match_parent"
-            android:src="@drawable/hourhand_grey"
+            android:src="@drawable/hourhand_black"
             android:id="@+id/hourHand"
             android:layout_centerInParent="true"
+            android:alpha="0.7"
             />
 
     </RelativeLayout>
 
-    <ToggleButton
+    <include layout="@layout/start_button"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:textColor="#ffffff"
-        android:textStyle="bold"
-        android:textOff="Set Alarm"
-        android:textOn="Disable Alarm"
-        android:id="@+id/startAlarmButton"
+        android:layout_centerInParent="true"
         android:layout_below="@+id/circleLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/button"/>
+        android:id="@+id/startAlarmButton"/>
 
 </RelativeLayout>

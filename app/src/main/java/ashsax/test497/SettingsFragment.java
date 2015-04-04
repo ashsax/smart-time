@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -162,6 +163,12 @@ public class SettingsFragment extends Fragment {
                 editor.apply();
                 AlarmFragment.startAlarmButton.setEnabled(!b);
                 editText.setEnabled(!b);
+
+                if(editText.isEnabled())
+                    editText.setTextColor(Color.parseColor("#EEEEEE"));
+                else
+                    editText.setTextColor(Color.GRAY);
+
                 // if calendarSync is switched off, then cancel the calendar alarm previously set
                 if (!b) {
                     if (AlarmFragment.mCalendarPendingIntent != null) {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ToggleButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="160dp"
+    android:layout_height="wrap_content"
+
+    android:text="New ToggleButton"
+    android:textColor="#ffffff"
+    android:textStyle="bold"
+    android:textOff="Set Alarm"
+    android:textOn="Disable Alarm"
+    android:id="@+id/startAlarmButton"
+    android:layout_below="@+id/circleLayout"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/button"
+    />

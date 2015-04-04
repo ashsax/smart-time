@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,21 +36,15 @@ import java.util.Calendar;
  * Use the {@link NapTimerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NapTimerFragment extends Fragment {
+public class NapTimerFragment extends ClockFragmentInterface {
 
-    private TextView mClock;
-    public static Button startAlarmButton;
-    private RelativeLayout mBox;
-    private CircularSeekBar mNapSeekBar;
     private NapTimer mNapTimer;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
-    final float[] hsvColor = {240, 0.68f, 0.2f};
     private SharedPreferences mSharedPrefs;
 
-    private final static int maxNap = 120;
 
-    private ImageView mImg;
+    private final static int maxNap = 120;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -82,6 +77,7 @@ public class NapTimerFragment extends Fragment {
 
     public NapTimerFragment() {
         // Required empty public constructor
+//        maxVal = 120;
     }
 
     @Override
@@ -94,8 +90,8 @@ public class NapTimerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_nap_timer, container, false);
     }
@@ -108,19 +104,23 @@ public class NapTimerFragment extends Fragment {
         mNapTimer = new NapTimer();
         mClock = (TextView) getActivity().findViewById(R.id.timer);
         startAlarmButton = (ToggleButton) getActivity().findViewById(R.id.startTimerButton);
-        mNapSeekBar = (CircularSeekBar) getActivity().findViewById(R.id.napSeekBar);
-        mNapSeekBar.setMax(maxNap);
+        mHourSeekBar = (CircularSeekBar) getActivity().findViewById(R.id.napSeekBar);
+        mHourSeekBar.setMax(maxNap);
 
         mImg = (ImageView) getActivity().findViewById(R.id.zzz);
         updateZZZ(0);
 
+        mMinuteHand = (ImageView) getActivity().findViewById(R.id.napHand);
+        mMinuteHand.setRotation(minRotation);
+
         setBackgroundColor();
 
-        mNapSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
+//        updateColor(8);
+        mHourSeekBar.setOnSeekBarChangeListener(new CircularSeekBar.OnCircularSeekBarChangeListener() {
             @Override
             public void onProgressChanged(CircularSeekBar circularSeekBar, int progress, boolean fromUser) {
                 if (progress == maxNap) {
-                    mNapSeekBar.setProgress(0);
+                    mHourSeekBar.setProgress(0);
                     progress = 0;
                 }
 
@@ -145,6 +145,9 @@ public class NapTimerFragment extends Fragment {
 
                 // set alarm based on user inputted time
                 if (on) {
+//                    startAlarmButton.setTextColor(Color.RED);
+//                    startAlarmButton.setText("Disable Alarm");
+
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.MILLISECOND, mNapTimer.getMilliseconds());
 
@@ -158,6 +161,9 @@ public class NapTimerFragment extends Fragment {
                     Toast.makeText(getActivity(), "We'll wake you up in " + mNapTimer.toastMsg(), Toast.LENGTH_SHORT).show();
                 }
                 else if (pendingIntent != null) {
+//                    startAlarmButton.setTextColor(Color.WHITE);
+//                    startAlarmButton.setText("Set Alarm");
+
                     alarmManager.cancel(pendingIntent);
                     pendingIntent.cancel();
                     Utility.clearNotification(view.getContext(), Utility.NAP_NOTIFICATION_ID);
@@ -166,18 +172,12 @@ public class NapTimerFragment extends Fragment {
         });
     }
 
-    public void updateColor(int i) {
-        float hue = (float) Math.cos((2 * Math.PI * (float) i / 24));
-        hsvColor[0] = 220 + 20f * hue;
-        hsvColor[2] = ((1 - hue)*0.35f) + 0.2f;
+    private void setBackgroundColor(){
+        mBox.setBackgroundDrawable( new DrawableGradient(tcbColor2, 0).SetTransparency(10));
     }
 
-    private void setBackgroundColor(){
-        Calendar cal = Calendar.getInstance();
-        int hrIndex = (cal.get(Calendar.HOUR_OF_DAY)/2) + 6;
-        updateColor(hrIndex);
-        mBox.setBackgroundColor(Color.HSVToColor(hsvColor));
-    }
+    @Override
+    public int getMax(){ return maxNap; }
 
     public void updateZZZ(int i){
         if(i > 0)
@@ -192,19 +192,13 @@ public class NapTimerFragment extends Fragment {
         updateZZZ(progress);
         mNapTimer.minutes = progress;
         mClock.setText(mNapTimer.toString());
+        mMinuteHand.setRotation(minRotation + progress*3);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (startAlarmButton == null) {
-            startAlarmButton = (ToggleButton) getActivity().findViewById(R.id.startAlarmButton);
-        }
-        if (mSharedPrefs == null) {
-            mSharedPrefs = getActivity().getSharedPreferences("calendarPrefs", Context.MODE_PRIVATE);
-        }
-
-        updateTimerDisplay(mNapSeekBar.getProgress());
+        updateTimerDisplay(mHourSeekBar.getProgress());
     }
 
 
