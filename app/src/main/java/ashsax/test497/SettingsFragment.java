@@ -94,6 +94,21 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        EditText editText = (EditText) getActivity().findViewById(R.id.editText);
+        if(editText.isEnabled()) {
+            editText.setTextColor(Color.parseColor("#EEEEEE"));
+            AlarmFragment.startAlarmButton.setEnabled(true);
+        }
+        else {
+            editText.setTextColor(Color.GRAY);
+            AlarmFragment.startAlarmButton.setEnabled(false);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
