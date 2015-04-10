@@ -42,7 +42,7 @@
             android:layout_centerInParent="true"
             app1:move_outside_circle="true"
             app1:circle_color="#00CCCCCC"
-            app1:circle_progress_color="#203B35DE"
+            app1:circle_progress_color="#303B35DE"
             app1:circle_stroke_width="15"
             app1:pointer_color="#00000000"
             app1:pointer_halo_color="#203B35DE"/>
