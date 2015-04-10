@@ -46,6 +46,7 @@ public class CalendarReceiver extends BroadcastReceiver {
 
                 Format tf = DateFormat.getTimeFormat(context);
                 Format df = DateFormat.getDateFormat(context);
+                Toast.makeText(context, "Alarm set for " + tf.format(alarmTime) + " " + df.format(alarmTime), Toast.LENGTH_SHORT).show();
                 Log.v("CalendarReceiver", "Alarm set for " + tf.format(alarmTime) + " " + df.format(alarmTime));
                 timeToSearchForEvents.setTimeInMillis(alarmTime + 30 * 1000); // search for events 30 seconds after alarm goes off
             }
