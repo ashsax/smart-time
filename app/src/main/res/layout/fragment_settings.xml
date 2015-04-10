@@ -112,33 +112,33 @@
     </LinearLayout>
 
     <!--Alarm type-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
-        android:id="@+id/alarmType"
-        android:layout_below="@+id/alarmSettingHeader">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:id="@+id/alarmType"-->
+        <!--android:layout_below="@+id/alarmSettingHeader">-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Alarm Type:"
-            android:textSize="18sp"
-            android:textColor="#dddddd"
-            android:layout_alignParentLeft="true"
-            android:paddingTop="0dp"
-            android:paddingLeft="20dp"/>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Alarm Type:"-->
+            <!--android:textSize="18sp"-->
+            <!--android:textColor="#dddddd"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:paddingTop="0dp"-->
+            <!--android:paddingLeft="20dp"/>-->
 
-        <Spinner
-            android:id="@+id/alarmTypeSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentRight="true"
-        />
+        <!--<Spinner-->
+            <!--android:id="@+id/alarmTypeSpinner"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="10dp"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:layout_alignParentRight="true"-->
+        <!--/>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
     <!--Snooze-->
     <LinearLayout
@@ -146,7 +146,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:id="@+id/snooze"
-        android:layout_below="@+id/alarmType">
+        android:layout_below="@+id/alarmSettingHeader">
 
         <TextView
             android:layout_width="wrap_content"

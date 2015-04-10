@@ -126,21 +126,21 @@ public class SettingsFragment extends Fragment {
                 "1", "2", "3", "4", "5"
         };
 
-        Spinner alarmSpinner = (Spinner) getActivity().findViewById(R.id.alarmTypeSpinner);
-        List<CharSequence> planets = new ArrayList<CharSequence>();
-        ArrayAdapter<CharSequence> adapter= new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_item, planets);
-
-        // GET RINGTONES AND ADD TO LIST
-        RingtoneManager ringtoneManager = new RingtoneManager(getActivity());
-//        ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
-//        Cursor ringtones = ringtoneManager.getCursor();
-//        String[] cols = ringtones.getColumnNames();
-//        Toast.makeText(getActivity(), "" + ringtones.getCount() , Toast.LENGTH_SHORT).show();
-
-        adapter.add("Alarm1");
-        adapter.add("Alarm2");
-        adapter.notifyDataSetChanged();
-        alarmSpinner.setAdapter(adapter);
+//        Spinner alarmSpinner = (Spinner) getActivity().findViewById(R.id.alarmTypeSpinner);
+//        List<CharSequence> planets = new ArrayList<CharSequence>();
+//        ArrayAdapter<CharSequence> adapter= new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_item, planets);
+//
+//        // GET RINGTONES AND ADD TO LIST
+//        RingtoneManager ringtoneManager = new RingtoneManager(getActivity());
+////        ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
+////        Cursor ringtones = ringtoneManager.getCursor();
+////        String[] cols = ringtones.getColumnNames();
+////        Toast.makeText(getActivity(), "" + ringtones.getCount() , Toast.LENGTH_SHORT).show();
+//
+//        adapter.add("Alarm1");
+//        adapter.add("Alarm2");
+//        adapter.notifyDataSetChanged();
+//        alarmSpinner.setAdapter(adapter);
 
 
         mSnoozePrefs = getActivity().getSharedPreferences("snoozePrefs", Context.MODE_PRIVATE);
