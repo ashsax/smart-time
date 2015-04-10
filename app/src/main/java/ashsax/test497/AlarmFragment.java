@@ -240,8 +240,10 @@ public class AlarmFragment extends ClockFragmentInterface {
     @Override
     public void onResume() {
         super.onResume();
-        boolean calendarSync = mSharedPrefs.getBoolean("calendarSync", false);
-        startAlarmButton.setEnabled(!calendarSync);
+        if (mSharedPrefs != null) {
+            boolean calendarSync = mSharedPrefs.getBoolean("calendarSync", false);
+            startAlarmButton.setEnabled(!calendarSync);
+        }
 
         updateColor(mHourSeekBar.getProgress());
         mHourHand.setRotation(hourRotation + mHourSeekBar.getProgress()*15);
