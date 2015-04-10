@@ -175,6 +175,10 @@ public class SettingsFragment extends Fragment {
                         MainActivity.mAlarmManager.cancel(AlarmFragment.mCalendarPendingIntent);
                         AlarmFragment.mCalendarPendingIntent.cancel();
                     }
+                    if (CalendarReceiver.mCalendarSearchPendingIntent != null) {
+                        MainActivity.mAlarmManager.cancel(CalendarReceiver.mCalendarSearchPendingIntent);
+                        CalendarReceiver.mCalendarSearchPendingIntent.cancel();
+                    }
                     Toast.makeText(getActivity(), "Alarm previously set by calendar cancelled", Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -183,7 +187,15 @@ public class SettingsFragment extends Fragment {
                         MainActivity.mAlarmManager.cancel(AlarmFragment.mCalendarPendingIntent);
                         AlarmFragment.mCalendarPendingIntent.cancel();
                     }
-                    
+                    if (CalendarReceiver.mCalendarSearchPendingIntent != null) {
+                        MainActivity.mAlarmManager.cancel(CalendarReceiver.mCalendarSearchPendingIntent);
+                        CalendarReceiver.mCalendarSearchPendingIntent.cancel();
+                    }
+                    if (AlarmFragment.mReminderPendingIntent != null) {
+                        MainActivity.mAlarmManager.cancel(AlarmFragment.mReminderPendingIntent);
+                        AlarmFragment.mReminderPendingIntent.cancel();
+                    }
+
                     editor = mTimePrefs.edit();
                     String minutesNeeded = editText.getText().toString();
                     editor.putInt("timeNeededToGetReady", Integer.parseInt(minutesNeeded));
@@ -192,10 +204,6 @@ public class SettingsFragment extends Fragment {
                     Intent calendarIntent = new Intent(getActivity(), CalendarReceiver.class);
                     PendingIntent calendarPendingIntent = PendingIntent.getBroadcast(MainActivity.mAlarmContext, 0, calendarIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     MainActivity.mAlarmManager.set(AlarmManager.RTC, Calendar.getInstance().getTimeInMillis(), calendarPendingIntent);
-                    
-                    Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
-                    // if pendingIntent already set, cancel it first before making this new one
-                    AlarmFragment.mCalendarPendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     
                     ToggleButton toggleButton = (ToggleButton) AlarmFragment.startAlarmButton;
                     toggleButton.setChecked(false);

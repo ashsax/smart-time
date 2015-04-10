@@ -122,7 +122,7 @@ public class Utility {
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle("SmartTime");
-        PendingIntent dismissPendingIntent = PendingIntent.getBroadcast(context, 1000, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent dismissPendingIntent;
         PendingIntent snoozePendingIntent;
         int notificationID = ALARM_NOTIFICATION_ID; // default ID corresponds to alarm
         if (notificationType == "alarm") {
@@ -134,7 +134,8 @@ public class Utility {
             snoozePendingIntent = PendingIntent.getBroadcast(context, 1000, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             mBuilder.addAction(R.drawable.ic_stat_av_snooze, "Snooze", snoozePendingIntent)
                     .setDeleteIntent(dismissPendingIntent)
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), AudioAttributes.USAGE_ALARM);
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), AudioAttributes.USAGE_ALARM)
+                    .addAction(R.drawable.ic_stat_action_alarm_off, "Dismiss", dismissPendingIntent);
         }
         else if (notificationType == "napTimer") {
             notificationID = NAP_NOTIFICATION_ID;
@@ -145,16 +146,16 @@ public class Utility {
             snoozePendingIntent = PendingIntent.getBroadcast(context, 1000, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             mBuilder.addAction(R.drawable.ic_stat_av_snooze, "Snooze", snoozePendingIntent)
                     .setDeleteIntent(dismissPendingIntent)
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), AudioAttributes.USAGE_ALARM);
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), AudioAttributes.USAGE_ALARM)
+                    .addAction(R.drawable.ic_stat_action_alarm_off, "Dismiss", dismissPendingIntent);
         }
         else if (notificationType == "reminder") {
             notificationID = REMINDER_NOTIFICATION_ID;
-            mBuilder.setContentText("Alarm set for the same time tomorrow");
-            Intent dismissIntent = new Intent(context, ReminderCancelReceiver.class);
-            dismissPendingIntent = PendingIntent.getBroadcast(context, 1000, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            Format tf = DateFormat.getTimeFormat(context);
+            Format df = DateFormat.getDateFormat(context);
+            mBuilder.setContentText("Alarm set for " + tf.format(AlarmFragment.calendarEventTime) + " tomorrow");
         }
-        mBuilder.setPriority(Notification.PRIORITY_MAX)
-                .addAction(R.drawable.ic_stat_action_alarm_off, "Dismiss", dismissPendingIntent);
+        mBuilder.setPriority(Notification.PRIORITY_MAX);
 
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);

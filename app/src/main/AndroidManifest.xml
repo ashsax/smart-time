@@ -41,15 +41,6 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
-
         <receiver
             android:name=".AlarmSnoozeReceiver"
             android:enabled="true"
@@ -71,12 +62,12 @@
             android:exported="true" >
         </receiver>
         <receiver
-            android:name=".ReminderCancelReceiver"
+            android:name=".CalendarReceiver"
             android:enabled="true"
             android:exported="true" >
         </receiver>
         <receiver
-            android:name=".CalendarReceiver"
+            android:name=".ReminderReceiver"
             android:enabled="true"
             android:exported="true" >
         </receiver>

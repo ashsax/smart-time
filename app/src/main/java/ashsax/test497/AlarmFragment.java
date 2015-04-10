@@ -42,6 +42,10 @@ public class AlarmFragment extends ClockFragmentInterface {
     private Time mTime;
     public static PendingIntent mCalendarPendingIntent;
     public static PendingIntent mManualPendingIntent;
+    public static PendingIntent mReminderPendingIntent;
+    public static long calendarEventTime;
+    final float[] hsvColor = {240, 0.68f, 0.2f};
+    private SharedPreferences mSharedPrefs;
 
     private final static int maxHours = 24;
     private final static int maxMinutes = 60;
